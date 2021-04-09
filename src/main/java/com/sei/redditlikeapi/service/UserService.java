@@ -1,17 +1,17 @@
 package com.sei.redditlikeapi.service;
 
+import com.sei.redditlikeapi.exception.InformationExistException;
+import com.sei.redditlikeapi.exception.InformationNotFoundException;
+import com.sei.redditlikeapi.model.User;
 import com.sei.redditlikeapi.model.UserProfile;
-import com.sei.todo.exception.InformationExistException;
-import com.sei.todo.exception.InformationNotFoundException;
-import com.sei.todo.model.User;
-import com.sei.todo.model.UserProfile;
-import com.sei.todo.model.request.LoginRequest;
-import com.sei.todo.model.response.LoginResponse;
-import com.sei.todo.repository.ProfileRepository;
-import com.sei.todo.repository.UserRepository;
-import com.sei.todo.security.JWTUtils;
-import com.sei.todo.security.MyUserDetails;
+import com.sei.redditlikeapi.model.request.LoginRequest;
+import com.sei.redditlikeapi.model.response.LoginResponse;
+import com.sei.redditlikeapi.repository.ProfileRepository;
+import com.sei.redditlikeapi.repository.UserRepository;
+import com.sei.redditlikeapi.security.JWTUtils;
+import com.sei.redditlikeapi.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +26,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Autowired
     private AuthenticationManager authenticationManager;
