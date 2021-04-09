@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="topics")
+@Table(name="articles")
 public class Article {
     @Id
     @Column
