@@ -1,5 +1,7 @@
 package com.sei.redditlikeapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -16,6 +18,16 @@ public class Comment {
 
     @Column
     private LocalDate dateCreated;
+
+    @JsonIgnore // Always in the opposite side of the mapping
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
+
+    @JsonIgnore // Always in the opposite side of the mapping
+    @ManyToOne
+    @JoinColumn(name="article_id")
+    private Article article;
 
 
     public Comment() {
@@ -57,5 +69,13 @@ public class Comment {
                 ", textContent='" + textContent + '\'' +
                 ", dateCreated=" + dateCreated +
                 '}';
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

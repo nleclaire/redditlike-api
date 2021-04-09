@@ -1,6 +1,11 @@
 package com.sei.redditlikeapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="topics")
@@ -15,6 +20,20 @@ public class Article {
 
     @Column
     private String textContent;
+
+    @OneToMany(mappedBy = "article", orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Comment> commentList;
+
+    @JsonIgnore // Always in the opposite side of the mapping
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
+
+    @JsonIgnore // To prevent StackOverflow when calling each other
+    @ManyToOne
+    @JoinColumn(name="topic_id")
+    private Topic topic;
 
 
     public Article() {
@@ -57,5 +76,13 @@ public class Article {
                 ", title='" + title + '\'' +
                 ", textContent='" + textContent + '\'' +
                 '}';
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

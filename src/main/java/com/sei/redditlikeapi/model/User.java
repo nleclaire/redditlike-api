@@ -6,6 +6,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -25,6 +26,23 @@ public class User {
     @Column
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  // only allowed to write, not read
     private String password;
+
+    //User has single profile
+    @OneToOne(cascade = CascadeType.ALL) //Fetch the record from user profile
+    @JoinColumn(name = "profile_id", referencedColumnName = "id") //LIKE THIS BECAUSE OWNING SIDE
+    private UserProfile userProfile;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true) //User can have more than one recipe
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Topic> topicList;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Article> articleList;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Article> commentList;
 
     public User() {
     }
@@ -76,5 +94,25 @@ public class User {
                 ", emailAddress='" + emailAddress + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public UserProfile getUserProfile() {
+        return userProfile;
+    }
+
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
+    }
+
+    public List<Topic> getTopicList() {
+        return topicList;
+    }
+
+    public List<Article> getArticleList() {
+        return articleList;
+    }
+
+    public List<Article> getCommentList() {
+        return commentList;
     }
 }
