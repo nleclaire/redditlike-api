@@ -85,4 +85,17 @@ public class Article {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+
+    public Topic getTopic() {
+        return topic;
+    }
+
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+    }
 }

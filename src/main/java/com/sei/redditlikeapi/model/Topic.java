@@ -79,4 +79,8 @@ public class Topic {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public List<Article> getArticleList() {
+        return articleList;
+    }
 }

@@ -78,4 +78,12 @@ public class Comment {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
+    }
 }
