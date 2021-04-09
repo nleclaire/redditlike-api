@@ -23,11 +23,9 @@ public class TopicService {
     }
 
     public List<?> getTopics(){
-        User currentUser = getAuthenticatedUser();
-        List<Topic> categories = topicRepository.findByUserId(currentUser.getId());
-        if (categories.isEmpty()) {
-            throw new InformationNotFoundException("No categories found for that user Id " + currentUser.getId());
+        if (topicRepository.findAll().isEmpty()) {
+            throw new InformationNotFoundException("No categories found!");
         } else
-            return categories;
+            return topicRepository.findAll();
     }
 }

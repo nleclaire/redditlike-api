@@ -12,6 +12,7 @@ public class TopicController {
     @Autowired
     private TopicService topicService;
 
+    //PUBLIC endpoint, everybody can have access
     @GetMapping("/topics")
     public List<?> getTopics(){
         return topicService.getTopics();
