@@ -1,5 +1,6 @@
 package com.sei.redditlikeapi.controller;
 
+import com.sei.redditlikeapi.model.Topic;
 import com.sei.redditlikeapi.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,8 @@ public class TopicController {
         return topicService.getTopics();
     }
 
-//    @PostMapping("/topics")
-//    public Topic createTopic(@RequestBody Topic topicObject){
-//        //return topicService.createTopic(topicObject);
-//    }
+    @PostMapping("/topics/new")
+    public Topic createTopic(@RequestBody Topic topicObject){
+        return topicService.createTopic(topicObject);
+    }
 }
