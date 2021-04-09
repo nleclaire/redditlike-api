@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="topics")
-public class Articles {
+public class Article {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,19 +16,11 @@ public class Articles {
     @Column
     private String textContent;
 
-    @Override
-    public String toString() {
-        return "Articles{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", textContent='" + textContent + '\'' +
-                '}';
+
+    public Article() {
     }
 
-    public Articles() {
-    }
-
-    public Articles(Long id, String title, String textContent) {
+    public Article(Long id, String title, String textContent) {
         this.id = id;
         this.title = title;
         this.textContent = textContent;
@@ -56,5 +48,14 @@ public class Articles {
 
     public void setTextContent(String description) {
         this.textContent = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Articles{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", textContent='" + textContent + '\'' +
+                '}';
     }
 }
