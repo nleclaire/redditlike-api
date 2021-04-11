@@ -84,4 +84,13 @@ public class TopicService {
         }
     }
 
+    public List<Article> getArticles(Long topicId){
+        List<Article> articles = articleRepository.findByTopicId(topicId);
+        if (articles != null){
+            return articles;
+        } else {
+            throw new InformationNotFoundException("Topic with Id " + topicId + " doesn't have any articles!");
+        }
+    }
+
 }
