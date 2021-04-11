@@ -59,8 +59,8 @@ public class TopicController {
     }
 
     @PutMapping("/topics/{topicId}/articles/{articleId}")
-    public Article updateArticle(@PathVariable Long topicId, @PathVariable Long articleId){
-        return topicService.updateArticle(topicId, articleId);
+    public Article updateArticle(@PathVariable Long topicId, @PathVariable Long articleId, @RequestBody Article articleObject){
+        return topicService.updateArticle(topicId, articleId, articleObject);
     }
 
 }

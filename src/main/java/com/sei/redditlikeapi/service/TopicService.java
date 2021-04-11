@@ -101,6 +101,14 @@ public class TopicService {
         }
     }
 
-
+    public Article updateArticle(Long topicId, Long articleId, Article articleObject){
+        Article updateArticle = articleRepository.findByTopicIdAndId(topicId, articleId);
+        if (updateArticle == null)
+            throw new InformationNotFoundException("Article with id " + articleId + " and topic id " + topicId + " not found!");
+        else
+            updateArticle.setTitle(articleObject.getTitle());
+            updateArticle.setTextContent(articleObject.getTextContent());
+            return articleRepository.save(updateArticle);
+    }
 
 }
