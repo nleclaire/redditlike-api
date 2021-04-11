@@ -3,8 +3,10 @@ package com.sei.redditlikeapi.service;
 import com.sei.redditlikeapi.exception.InformationExistException;
 import com.sei.redditlikeapi.exception.InformationForbidden;
 import com.sei.redditlikeapi.exception.InformationNotFoundException;
+import com.sei.redditlikeapi.model.Article;
 import com.sei.redditlikeapi.model.Topic;
 import com.sei.redditlikeapi.model.User;
+import com.sei.redditlikeapi.repository.ArticleRepository;
 import com.sei.redditlikeapi.repository.TopicRepository;
 import com.sei.redditlikeapi.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class TopicService {
 
     @Autowired
     private TopicRepository topicRepository;
+
+    @Autowired
+    private ArticleRepository articleRepository;
 
     public User getAuthenticatedUser() {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -66,5 +71,17 @@ public class TopicService {
             topicRepository.deleteById(topicId);
     }
 
+    public Article createArticle(Long topicId, Article articleObject){
+        User currentUser = getAuthenticatedUser();
+        Topic topic = topicRepository.findById(topicId).get();
+        Article article = articleRepository.findByIdAndTitle(articleObject.getId(), articleObject.getTitle());
+        if (article != null) {
+            throw new InformationExistException("Article with id " + articleObject.getId() + " already exists!");
+        } else {
+            articleObject.setTopic(topic);
+            articleObject.setUser(currentUser);
+            return articleRepository.save(articleObject);
+        }
+    }
 
 }

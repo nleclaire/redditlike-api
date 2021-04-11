@@ -1,5 +1,6 @@
 package com.sei.redditlikeapi.controller;
 
+import com.sei.redditlikeapi.model.Article;
 import com.sei.redditlikeapi.model.Topic;
 import com.sei.redditlikeapi.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,14 @@ public class TopicController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PostMapping("/topics/{topicId}/articles")
+    public Article createArticle(@PathVariable Long topicId, @RequestBody Article articleObject){
+        return topicService.createArticle(topicId, articleObject);
+    }
 
+    @GetMapping("/topics/{topicId}/articles")
+    public List<Article> getArticles(@PathVariable Long topicId){
+        return topicService.getArticles(topicId);
+    }
 
 }
