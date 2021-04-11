@@ -100,4 +100,7 @@ public class TopicService {
             throw new InformationNotFoundException("Article with id " + articleId + " and topic id " + topicId + " not found!");
         }
     }
+
+
+
 }
