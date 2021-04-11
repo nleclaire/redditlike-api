@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -46,23 +47,24 @@ public class TopicService {
 
     public Topic updateTopic(Long topicId, Topic topicObject){
         User currentUser = getAuthenticatedUser();
-        Topic topic = topicRepository.findById(topicId).get();
-        if (topic == null){
-            throw new InformationNotFoundException("Topic with id " + topicId + " doesn't exist!");
-        } else {
+        try {
+            Topic topic = topicRepository.findById(topicId).get();
             topic.setName(topicObject.getName());
             topic.setDescription(topicObject.getDescription());
             topic.setUser(currentUser);
             return topicRepository.save(topic);
+        } catch (NoSuchElementException e) {
+            throw new NoSuchElementException("Topic with id " + topicId + " doesn't exist!");
         }
     }
 
     public void deleteTopic(Long topicId){
-        User currentUser = getAuthenticatedUser();
-        Topic topic = topicRepository.findById(topicId).get();
-        if (topic == null)
+        Optional<Topic> topic = topicRepository.findById(topicId);
+        if (topic.isEmpty())
             throw new InformationNotFoundException("Topic with id " + topicId + " doesn't exist!");
         else
             topicRepository.deleteById(topicId);
     }
+
+
 }
