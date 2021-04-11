@@ -44,16 +44,15 @@ public class TopicService {
                 topicObject.getName());
         if (topic != null)
             throw new InformationExistException("Topic with name " + topic.getName() + " already exists!");
-        else {
+          else
             topicObject.setUser(currentUser); // to set the user owner to new topic
             return topicRepository.save(topicObject);
-        }
     }
 
     public Topic updateTopic(Long topicId, Topic topicObject){
         User currentUser = getAuthenticatedUser();
+        Topic topic = topicRepository.findById(topicId).get();
         try {
-            Topic topic = topicRepository.findById(topicId).get();
             topic.setName(topicObject.getName());
             topic.setDescription(topicObject.getDescription());
             topic.setUser(currentUser);
@@ -67,46 +66,44 @@ public class TopicService {
         Optional<Topic> topic = topicRepository.findById(topicId);
         if (topic.isEmpty())
             throw new InformationNotFoundException("Topic with id " + topicId + " doesn't exist!");
-        else
+          else
             topicRepository.deleteById(topicId);
     }
 
     public Article createArticle(Long topicId, Article articleObject){
         User currentUser = getAuthenticatedUser();
-        Topic topic = topicRepository.findById(topicId).get();
-        Article article = articleRepository.findByIdAndTitle(articleObject.getId(), articleObject.getTitle());
-        if (article != null) {
+        Topic topic = topicRepository.findByTopicId(topicId);
+        if (articleRepository.findByIdAndTitle(articleObject.getId(), articleObject.getTitle()) != null)
             throw new InformationExistException("Article with id " + articleObject.getId() + " already exists!");
-        } else {
+          else
             articleObject.setTopic(topic);
             articleObject.setUser(currentUser);
             return articleRepository.save(articleObject);
-        }
     }
 
     public List<Article> getArticles(Long topicId){
         List<Article> articles = articleRepository.findByTopicId(topicId);
-        if (articles != null){
+        if (articles != null)
             return articles;
-        } else {
+          else
             throw new InformationNotFoundException("Topic with Id " + topicId + " doesn't have any articles!");
-        }
     }
 
     public Article getArticle(Long topicId, Long articleId){
-        if (articleRepository.findByTopicIdAndId(topicId, articleId) != null) {
+        if (articleRepository.findByTopicIdAndId(topicId, articleId) != null)
             return articleRepository.findByTopicIdAndId(topicId, articleId);
-        } else {
+          else
             throw new InformationNotFoundException("Article with id " + articleId + " and topic id " + topicId + " not found!");
-        }
     }
 
     // TODO: check whether current user is the user who created the article, or is an admin
     public Article updateArticle(Long topicId, Long articleId, Article articleObject){
-        Article updateArticle = articleRepository.findByTopicIdAndId(topicId, articleId);
+        List<Article> articles = this.getArticles(topicId);
+
+        Article updateArticle = articles.stream().filter(a -> a.getId().equals(articleId)).findFirst().get();
         if (updateArticle == null)
             throw new InformationNotFoundException("Article with id " + articleId + " and topic id " + topicId + " not found!");
-        else
+          else
             updateArticle.setTitle(articleObject.getTitle());
             updateArticle.setTextContent(articleObject.getTextContent());
             return articleRepository.save(updateArticle);
