@@ -101,6 +101,7 @@ public class TopicService {
         }
     }
 
+    // TODO: check whether current user is the user who created the article, or is an admin
     public Article updateArticle(Long topicId, Long articleId, Article articleObject){
         Article updateArticle = articleRepository.findByTopicIdAndId(topicId, articleId);
         if (updateArticle == null)
@@ -109,6 +110,13 @@ public class TopicService {
             updateArticle.setTitle(articleObject.getTitle());
             updateArticle.setTextContent(articleObject.getTextContent());
             return articleRepository.save(updateArticle);
+    }
+
+    public void deleteArticle(Long topicId, Long articleId){
+        if (articleRepository.findByTopicIdAndId(topicId, articleId) == null)
+            throw new InformationNotFoundException("Article with id " + articleId + " and topic id " + topicId + " not found!");
+          else
+            articleRepository.deleteById(articleId);
     }
 
 }
