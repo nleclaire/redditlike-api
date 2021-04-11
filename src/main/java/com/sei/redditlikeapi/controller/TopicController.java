@@ -63,4 +63,12 @@ public class TopicController {
         return topicService.updateArticle(topicId, articleId, articleObject);
     }
 
+    @DeleteMapping("/topics/{topicId}/articles/{articleId}")
+    public ResponseEntity<HashMap> deleteTopic(@PathVariable Long topicId, @PathVariable Long articleId){
+        topicService.deleteArticle(topicId, articleId);
+        HashMap response = new HashMap();
+        response.put("Response", "Article with id " + articleId + " has been deleted");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }
