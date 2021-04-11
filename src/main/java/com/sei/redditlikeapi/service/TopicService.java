@@ -56,4 +56,13 @@ public class TopicService {
             return topicRepository.save(topic);
         }
     }
+
+    public void deleteTopic(Long topicId){
+        User currentUser = getAuthenticatedUser();
+        Topic topic = topicRepository.findById(topicId).get();
+        if (topic == null)
+            throw new InformationNotFoundException("Topic with id " + topicId + " doesn't exist!");
+        else
+            topicRepository.deleteById(topicId);
+    }
 }

@@ -3,8 +3,11 @@ package com.sei.redditlikeapi.controller;
 import com.sei.redditlikeapi.model.Topic;
 import com.sei.redditlikeapi.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,14 @@ public class TopicController {
     @PutMapping("/topics/{topicId}")
     public Topic updateTopic(@PathVariable Long topicId, @RequestBody Topic topicObject){
         return topicService.updateTopic(topicId, topicObject);
+    }
+
+    @DeleteMapping("/topics/{topicId}")
+    public ResponseEntity<HashMap> deleteTopic(@PathVariable Long topicId){
+        topicService.deleteTopic(topicId);
+        HashMap response = new HashMap();
+        response.put("Response", "Topic with id " + topicId + " has been deleted");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
