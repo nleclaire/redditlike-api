@@ -72,11 +72,11 @@ public class TopicService {
 
     public Article createArticle(Long topicId, Article articleObject){
         User currentUser = getAuthenticatedUser();
-        Topic topic = topicRepository.findByTopicId(topicId);
+        Optional<Topic> topic = topicRepository.findById(topicId);
         if (articleRepository.findByIdAndTitle(articleObject.getId(), articleObject.getTitle()) != null)
             throw new InformationExistException("Article with id " + articleObject.getId() + " already exists!");
           else
-            articleObject.setTopic(topic);
+            articleObject.setTopic(topic.get());
             articleObject.setUser(currentUser);
             return articleRepository.save(articleObject);
     }
