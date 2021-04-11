@@ -93,4 +93,11 @@ public class TopicService {
         }
     }
 
+    public Article getArticle(Long topicId, Long articleId){
+        if (articleRepository.findByTopicIdAndId(topicId, articleId) != null) {
+            return articleRepository.findByTopicIdAndId(topicId, articleId);
+        } else {
+            throw new InformationNotFoundException("Article with id " + articleId + " and topic id " + topicId + " not found!");
+        }
+    }
 }

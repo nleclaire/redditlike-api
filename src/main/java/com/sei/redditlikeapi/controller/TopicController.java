@@ -6,6 +6,7 @@ import com.sei.redditlikeapi.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -50,6 +51,11 @@ public class TopicController {
     @GetMapping("/topics/{topicId}/articles")
     public List<Article> getArticles(@PathVariable Long topicId){
         return topicService.getArticles(topicId);
+    }
+
+    @GetMapping("/topics/{topicId}/articles/{articleId}")
+    public Article getArticle(@PathVariable Long topicId, @PathVariable Long articleId){
+        return topicService.getArticle(topicId, articleId);
     }
 
 }
