@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long> {
     List<Topic> findByUserId(Long id);
+    Topic findByName(String name);
     Topic findByUserIdAndName(Long id, String name);
 //    Topic findByTopicId(Long topicId);
     Topic findByIdAndUserId(Long topicId, Long userId);
