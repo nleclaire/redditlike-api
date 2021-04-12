@@ -56,7 +56,8 @@ public class TopicService {
     public Topic updateTopic(Long topicId, Topic topicObject) {
         User currentUser = utility.getAuthenticatedUser();
         if (topicRepository.findById(topicId).isPresent()) {
-            if (utility.checkIfUserTopicExists(topicRepository, currentUser.getId(), topicId)) {
+            if (utility.checkIfUserTopicExists(topicRepository, currentUser.getId(), topicId)
+                    || utility.isUserAdmin(currentUser)) {
                 Topic topic = topicRepository.findById(topicId).get();
                 topic.setName(topicObject.getName());
                 topic.setDescription(topicObject.getDescription());
@@ -70,7 +71,8 @@ public class TopicService {
     public void deleteTopic(Long topicId) {
         User currentUser = utility.getAuthenticatedUser();
         if (topicRepository.findById(topicId).isPresent()) {
-            if (utility.checkIfUserTopicExists(topicRepository, topicId, currentUser.getId()))
+            if (utility.checkIfUserTopicExists(topicRepository, topicId, currentUser.getId())
+                    || utility.isUserAdmin(currentUser))
                 topicRepository.deleteById(topicId);
             else
                 throw new InformationForbidden("You're not allowed to delete topic with id " + topicId);
@@ -123,7 +125,8 @@ public class TopicService {
         if (updateArticle == null)
             throw new InformationNotFoundException("Article with ID " + articleId + " and topic ID " + topicId + " not found!");
         else {
-            if (updateArticle.getId() == articleRepository.findByIdAndUserId(articleId, currentUser.getId()).getId()) {
+            if (updateArticle.getId() == articleRepository.findByIdAndUserId(articleId, currentUser.getId()).getId()
+                    || utility.isUserAdmin(currentUser)) {
                 updateArticle.setTitle(articleObject.getTitle());
                 updateArticle.setTextContent(articleObject.getTextContent());
                 return articleRepository.save(updateArticle);
@@ -141,7 +144,8 @@ public class TopicService {
             throw new InformationNotFoundException("Article with ID " + articleId + " in topic with ID " + topicId +
                     " not found!");
         else {
-            if (articleRepository.findById(articleId).get().getUser().getId() == currentUser.getId())
+            if (articleRepository.findById(articleId).get().getUser().getId() == currentUser.getId()
+                    || utility.isUserAdmin(currentUser))
                 articleRepository.deleteById(articleId);
             else
                 throw new InformationForbidden("You're not allowed to delete article with ID " + articleId);
