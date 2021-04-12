@@ -1,10 +1,12 @@
 package com.sei.redditlikeapi.service;
 
 import com.sei.redditlikeapi.exception.InformationExistException;
+import com.sei.redditlikeapi.exception.InformationForbidden;
 import com.sei.redditlikeapi.exception.InformationNotFoundException;
 import com.sei.redditlikeapi.model.Article;
 import com.sei.redditlikeapi.model.Comment;
 import com.sei.redditlikeapi.model.Topic;
+import com.sei.redditlikeapi.model.User;
 import com.sei.redditlikeapi.repository.ArticleRepository;
 import com.sei.redditlikeapi.repository.CommentRepository;
 import com.sei.redditlikeapi.repository.TopicRepository;
@@ -16,6 +18,8 @@ import java.util.Optional;
 
 @Service
 public class CommentService {
+    private UtilityService utility = new UtilityService();
+
     @Autowired
     private CommentRepository commentRepository;
 
@@ -34,6 +38,7 @@ public class CommentService {
         Optional<Article> article = articleRepository.findById(articleId);
         if (topic.isPresent() && article.isPresent()){
             commentObject.setArticle(article.get());
+            commentObject.setUser(utility.getAuthenticatedUser());
             return commentRepository.save(commentObject);
         } else {
             throw new InformationNotFoundException("Cannot find topic or article");
@@ -58,11 +63,23 @@ public class CommentService {
     }
 
     public void deleteComment(Long topicId, Long articleId, Long commentId){
-        Optional<Topic> topic = topicRepository.findById(topicId);
-        Optional<Article> article = articleRepository.findById(articleId);
+        User user = utility.getAuthenticatedUser();
 
-        if (topic.isPresent() && article.isPresent()){
-            commentRepository.deleteById(commentId);
+        if (commentRepository.findById(commentId).isPresent()){
+            Comment comment = commentRepository.findById(commentId).get();
+
+            if(utility.isUserAdmin(user) || comment.getUser() == user){
+                Optional<Topic> topic = topicRepository.findById(topicId);
+                Optional<Article> article = articleRepository.findById(articleId);
+
+                if (topic.isPresent() && article.isPresent()){
+                    commentRepository.deleteById(commentId);
+                }
+            } else {
+                throw new InformationForbidden("You must be the original poster or an admin to delete this comment!");
+            }
+        } else {
+            throw new InformationNotFoundException("Comment with id " + commentId + " not found!");
         }
 
     }
