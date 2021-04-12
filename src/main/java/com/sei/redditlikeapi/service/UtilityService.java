@@ -1,5 +1,7 @@
 package com.sei.redditlikeapi.service;
 
+import com.sei.redditlikeapi.exception.InformationForbidden;
+import com.sei.redditlikeapi.exception.InformationNotFoundException;
 import com.sei.redditlikeapi.model.User;
 import com.sei.redditlikeapi.repository.TopicRepository;
 import com.sei.redditlikeapi.security.MyUserDetails;
@@ -9,14 +11,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class UtilityService {
     //Returns Authenticated through JWT Token User
     public User getAuthenticatedUser() {
+            if ( SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser"))
+                throw new InformationForbidden("Forbidden");
             MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return userDetails.getUser();
     }
 
     public boolean isUserAdmin(User user){
-        if (user.getUserProfile() != null)
-            return user.getUserProfile().isAdmin();
-        return false;
+        return user!=null ? user.isAdmin() : false;
     }
 
     //Will check if topic exists by name
