@@ -10,14 +10,14 @@ A RESTful API written in Java made for sharing articles.
 | ------------ | ---- | ------------- |
 | GET | /api/topics | List all topics |
 | POST | /api/topics | Create new topics |
-| GET | /api/topics/<span style="color:orange">{topicId}</span> | Get a single topic w/ id |
-| PUT | /api/topics/<span style="color:orange">{topicId}</span> | Update a single topic w/ id |
-| DELETE | /api/topics/<span style="color:orange">{topicId}</span> | Delete a single topic w/ id |
-| GET | /api/topics/<span style="color:orange">{topicId}</span>/articles | Get all articles for single topic w/ id |
-| POST | /api/topics/<span style="color:orange">{topicId}</span>/articles | Create a new article in the given topic |
-| GET | /api/topics/<span style="color:orange">{topicId}</span>/articles/<span style="color:orange">{articleId}</span> | List single article in specified topic by Id |
-| PUT | /api/topics/<span style="color:orange">{topicId}</span>/articles/<span style="color:orange">{articleId}</span> | Update single article in specified topic by Id |
-| DELETE | /api/topics/<span style="color:orange">{topicId}</span>/articles/<span style="color:orange">{articleId}</span> | Delete single article in specified topic by Id |
+| GET | /api/topics/{topicId} | Get a single topic w/ id |
+| PUT | /api/topics/{topicId} | Update a single topic w/ id |
+| DELETE | /api/topics/{topicId} | Delete a single topic w/ id |
+| GET | /api/topics/{topicId}/articles | Get all articles for single topic w/ id |
+| POST | /api/topics/{topicId}/articles | Create a new article in the given topic |
+| GET | /api/topics/{topicId}/articles/<span style="color:orange">{articleId}</span> | List single article in specified topic by Id |
+| PUT | /api/topics/{topicId}/articles/<span style="color:orange">{articleId}</span> | Update single article in specified topic by Id |
+| DELETE | /api/topics/{topicId}/articles/<span style="color:orange">{articleId}</span> | Delete single article in specified topic by Id |
 | POST | /auth/users/register | Registers a new user |
 | POST | /auth/users/login | Logs a user in |
 
@@ -36,13 +36,15 @@ Go ahead and find your way to your friendly neighborhood Postman and open up a n
 
 Make sure you're pointing towards http://localhost:9092/auth/users/register and send the following in the body of the request.
 Quickly now! There's lunch to be discussed.
-```
+
+```json
 {
 	"userName" : "LunchLover",
 	"emailAddress" : "Lunchman.leclaire@email.com",
 	"password" : "12345"
 }
 ```
+
 Make sure you have selected raw and JSON for your Body.
 
 If you get an error saying "Unsupported Media Type", navigate to 
@@ -52,7 +54,7 @@ and a Value of `application/json`.
 If you did it right you should see a response like the one below,
 stating that you created the object. **Success!** 
 
-```
+```json
 {
     "id": 2,
     "userName": "LunchLover",
@@ -75,7 +77,7 @@ Now that you're registered, you can log in to receive a JWT token used for authe
 Change your endpoint to http://localhost:9092/auth/users/login and send the same
 content as you did to sign up in the body (again, formatted as JSON).
 
-```
+```json
 {
 	"userName" : "LunchLover",
 	"emailAddress" : "Lunchman.leclaire@email.com",
@@ -85,7 +87,7 @@ content as you did to sign up in the body (again, formatted as JSON).
 
 Once you do, you should see a response like so:
 
-```
+```json
 {
     "jwt": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJMdW5jaG1hbi5sZWNsYWlyZUBlbWFpbC5jb20iLCJleHAiOjE2MTgyMTA3OTIsImlhdCI6MTYxODE3NDc5Mn0.Ct76ylDVo2L7PGdpOWDvZaHCUZSjQdUMo3y9jVAH-Js"
 }
@@ -100,7 +102,7 @@ Finally we're all set up to start talking about lunch. I'm starving!
 Point your Postman to http://localhost:9092/api/topics/new and type (or copy/paste) the
 information below in the Body section of your request
 
-```
+```json
 {
     "title" : "Lunch",
     "description" : "My favorite meal of the day!"
@@ -117,7 +119,7 @@ and in the Value section add `Bearer YOUR_JWT_TOKEN_HERE`
 
 Finally, we're ready to talk about Lunch. Hit Send.
 
-```
+```json
 {
     "id": 4,
     "name": "Breakfast",
