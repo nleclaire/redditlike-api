@@ -50,9 +50,9 @@ public class UserService {
                 throw new InformationExistException("User with Username '" + userObject.getUserName() +
                         "' already exists");
             userObject.setPassword(passwordEncoder.encode(userObject.getPassword()));
-            if (userObject.getSecretQuestion() == null)
+            if (userObject.getWhoShotFirst() == null)
                 return userRepository.save(userObject.toUser(false));
-            else if (userObject.getSecretQuestion().equals("some answer"))
+            else if (userObject.getWhoShotFirst().equals("Han"))
                 return userRepository.save(userObject.toUser(true));
             else
                 return userRepository.save(userObject.toUser(false));
