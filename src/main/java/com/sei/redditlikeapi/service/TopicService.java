@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 public class TopicService {
 
-    UtilityService utility = new UtilityService();
+    private UtilityService utility = new UtilityService();
 
     @Autowired
     private TopicRepository topicRepository;

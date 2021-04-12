@@ -56,4 +56,15 @@ public class CommentService {
             throw new InformationNotFoundException("Cannot find topic or article");
         }
     }
+
+    public void deleteComment(Long topicId, Long articleId, Long commentId){
+        Optional<Topic> topic = topicRepository.findById(topicId);
+        Optional<Article> article = articleRepository.findById(articleId);
+
+        if (topic.isPresent() && article.isPresent()){
+            commentRepository.deleteById(commentId);
+        }
+
+    }
+
 }
