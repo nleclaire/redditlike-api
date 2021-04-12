@@ -36,7 +36,7 @@ Go ahead and find your way to your friendly neighborhood Postman and open up a n
 
 Make sure you're pointing towards http://localhost:9092/auth/users/register and send the following in the body of the request.
 Quickly now! There's lunch to be discussed.
-```
+```json
 {
 	"userName" : "LunchLover",
 	"emailAddress" : "Lunchman.leclaire@email.com",
