@@ -2,8 +2,7 @@ package com.sei.redditlikeapi.model;
 
 public class UserAdminHint extends User{
 
-   private String secretQuestion = null;
-
+   private String whoShotFirst;
 
     public UserAdminHint() {
     }
@@ -14,7 +13,7 @@ public class UserAdminHint extends User{
         return returnUser;
     }
 
-    public String getSecretQuestion() {
-        return secretQuestion;
+    public String getWhoShotFirst() {
+        return this.whoShotFirst;
     }
 }
