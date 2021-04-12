@@ -37,7 +37,7 @@ public class MyUserDetails implements UserDetails {
     // Indicates whether the user's account has expired.
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return !user.isPasswordExpired();
     }
 
     // Indicates whether the user is locked or unlocked.

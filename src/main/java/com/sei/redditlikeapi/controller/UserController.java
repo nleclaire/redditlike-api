@@ -48,4 +48,9 @@ public class UserController {
     public UserProfile updateProfile(@RequestBody UserProfile newProfile) {
         return userService.updateProfile(newProfile);
     }
+
+    @PostMapping ("/users/login/changepass")
+    public User changePassword(@RequestBody String newPassword){
+        return userService.changePassword(newPassword);
+    }
 }

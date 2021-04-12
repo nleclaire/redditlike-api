@@ -2,7 +2,6 @@ package com.sei.redditlikeapi.controller;
 
 import com.sei.redditlikeapi.model.Comment;
 import com.sei.redditlikeapi.service.CommentService;
-import com.sei.redditlikeapi.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

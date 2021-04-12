@@ -20,6 +20,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class UserService {
 
@@ -50,6 +52,9 @@ public class UserService {
                 throw new InformationExistException("User with Username '" + userObject.getUserName() +
                         "' already exists");
             userObject.setPassword(passwordEncoder.encode(userObject.getPassword()));
+            System.out.println("DATE" + new Date(System.currentTimeMillis()));
+            userObject.setPasswordChangedTime(new Date(System.currentTimeMillis()));
+            System.out.println("DATE 2: " + userObject.getPasswordChangedTime());
             if (userObject.getSecretQuestion() == null)
                 return userRepository.save(userObject.toUser(false));
             else if (userObject.getSecretQuestion().equals("some answer"))
@@ -109,5 +114,13 @@ public class UserService {
         } else
             throw new InformationNotFoundException("User profile doesn't exist for User with ID " +
                     currentUser.getId());
+    }
+
+    public User changePassword(String newPassword) {
+        User currentUser = utility.getAuthenticatedUser();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        currentUser.setPassword(encodedPassword);
+        currentUser.setPasswordChangedTime(new Date(System.currentTimeMillis()));
+        return userRepository.save(currentUser);
     }
 }

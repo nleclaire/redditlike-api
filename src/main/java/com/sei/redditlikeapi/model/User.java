@@ -6,11 +6,15 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name="users")
 public class User {
+
+    private static final long PASSWORD_EXPIRATION_TIME
+            = 1L;    // 30 days
 
     @Id
     @Column
@@ -26,6 +30,9 @@ public class User {
     @Column
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  // only allowed to write, not read
     private String password;
+
+    @Column(name = "password_changed_time")
+    private Date passwordChangedTime;
 
     @Column
     private boolean isAdmin;
@@ -125,5 +132,22 @@ public class User {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public boolean isPasswordExpired() {
+        if (this.passwordChangedTime == null) return false;
+
+        long currentTime = System.currentTimeMillis();
+        long lastChangedTime = this.passwordChangedTime.getTime();
+
+        return currentTime > lastChangedTime + PASSWORD_EXPIRATION_TIME;
+    }
+
+    public void setPasswordChangedTime(Date passwordChangedTime) {
+        this.passwordChangedTime = passwordChangedTime;
+    }
+
+    public Date getPasswordChangedTime() {
+        return passwordChangedTime;
     }
 }

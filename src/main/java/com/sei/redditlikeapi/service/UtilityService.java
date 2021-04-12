@@ -14,6 +14,8 @@ public class UtilityService {
             if ( SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser"))
                 throw new InformationForbidden("Forbidden");
             MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (userDetails.getUser().isPasswordExpired())
+                throw new InformationForbidden("Password is expired. Please, change your password");
             return userDetails.getUser();
     }
 
