@@ -64,17 +64,13 @@ public class CommentService {
 
     public void deleteComment(Long topicId, Long articleId, Long commentId){
         User user = utility.getAuthenticatedUser();
+        Optional<Comment> comment = commentRepository.findById(commentId);
+        Optional<Topic> topic = topicRepository.findById(topicId);
+        Optional<Article> article = articleRepository.findById(articleId);
 
-        if (commentRepository.findById(commentId).isPresent()){
-            Comment comment = commentRepository.findById(commentId).get();
-
-            if(utility.isUserAdmin(user) || comment.getUser() == user){
-                Optional<Topic> topic = topicRepository.findById(topicId);
-                Optional<Article> article = articleRepository.findById(articleId);
-
-                if (topic.isPresent() && article.isPresent()){
-                    commentRepository.deleteById(commentId);
-                }
+        if (comment.isPresent() && topic.isPresent() && article.isPresent()){
+            if(utility.isUserAdmin(user) || comment.get().getUser() == user){
+                commentRepository.deleteById(commentId);
             } else {
                 throw new InformationForbidden("You must be the original poster or an admin to delete this comment!");
             }
