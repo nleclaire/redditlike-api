@@ -27,6 +27,9 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  // only allowed to write, not read
     private String password;
 
+    @Column
+    private boolean isAdmin;
+
     //User has single profile
     @OneToOne(cascade = CascadeType.ALL) //Fetch the record from user profile
     @JoinColumn(name = "profile_id", referencedColumnName = "id") //LIKE THIS BECAUSE OWNING SIDE
@@ -52,6 +55,7 @@ public class User {
         this.userName = userName;
         this.emailAddress = emailAddress;
         this.password = password;
+        this.isAdmin = false;
     }
 
     public Long getId() {
@@ -114,5 +118,12 @@ public class User {
 
     public List<Article> getCommentList() {
         return commentList;
+    }
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 }

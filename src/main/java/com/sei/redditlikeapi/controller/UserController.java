@@ -1,5 +1,6 @@
 package com.sei.redditlikeapi.controller;
 import com.sei.redditlikeapi.model.User;
+import com.sei.redditlikeapi.model.UserAdminHint;
 import com.sei.redditlikeapi.model.UserProfile;
 import com.sei.redditlikeapi.model.request.LoginRequest;
 import com.sei.redditlikeapi.service.UserService;
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/users/register")
-    public User createUser(@RequestBody User userObject){
+    public User createUser(@RequestBody UserAdminHint userObject){
         return userService.createUser(userObject);
     }
 
