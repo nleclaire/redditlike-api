@@ -15,14 +15,19 @@ public class UtilityService {
             return userDetails.getUser();
     }
 
-    //Will check if topic exists
+    //Will check if topic exists by name
     public boolean checkIfTopicExists(TopicRepository repository, String name){
         return repository.findByName(name) != null ? true : false;
     }
 
-    //Will check if topic exists related to User topics
+    //Will check if topic exists related to User topics by name
     public boolean checkIfUserTopicExists(TopicRepository repository, Long userId, String name){
         return repository.findByUserIdAndName(userId,name) != null ? true : false;
+    }
+
+    //Will check if topic exists related to User topics by id
+    public boolean checkIfUserTopicExists(TopicRepository repository, Long userId, Long topicId){
+        return repository.findByIdAndUserId(topicId,userId) != null ? true : false;
     }
 
 }

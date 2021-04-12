@@ -3,20 +3,15 @@ package com.sei.redditlikeapi.service;
 import com.sei.redditlikeapi.exception.InformationExistException;
 import com.sei.redditlikeapi.exception.InformationForbidden;
 import com.sei.redditlikeapi.exception.InformationNotFoundException;
-import com.sei.redditlikeapi.exception.TokenExpiredException;
 import com.sei.redditlikeapi.model.Article;
 import com.sei.redditlikeapi.model.Topic;
 import com.sei.redditlikeapi.model.User;
 import com.sei.redditlikeapi.repository.ArticleRepository;
 import com.sei.redditlikeapi.repository.TopicRepository;
-import com.sei.redditlikeapi.security.MyUserDetails;
-import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -50,17 +45,20 @@ public class TopicService {
         }
     }
 
+    //TODO: Maybe check if user actually sets changes to the topic
     public Topic updateTopic(Long topicId, Topic topicObject) {
         User currentUser = utility.getAuthenticatedUser();
-        Topic topic = topicRepository.findById(topicId).get();
-        try {
-            topic.setName(topicObject.getName());
-            topic.setDescription(topicObject.getDescription());
-            topic.setUser(currentUser);
-            return topicRepository.save(topic);
-        } catch (NoSuchElementException e) {
-            throw new NoSuchElementException("Topic with id " + topicId + " doesn't exist!");
+        if (topicRepository.findById(topicId).isPresent()) {
+            if (utility.checkIfUserTopicExists(topicRepository, currentUser.getId(), topicId)) {
+                Topic topic = topicRepository.findById(topicId).get();
+                topic.setName(topicObject.getName());
+                topic.setDescription(topicObject.getDescription());
+                return topicRepository.save(topic);
+            } else
+                throw new InformationForbidden("You're not allowed to change data in topic with id " + topicId);
         }
+        else
+            throw new InformationNotFoundException("Topic with ID " + topicId + " doesn't exist");
     }
 
     public void deleteTopic(Long topicId) {
