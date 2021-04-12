@@ -22,13 +22,11 @@ public class UserController {
 
     @PostMapping(path = "/users/register")
     public User createUser(@RequestBody User userObject){
-        System.out.println("===> Create User executed");
         return userService.createUser(userObject);
     }
 
     @DeleteMapping("/users/delete/{userId}")
     public ResponseEntity<HashMap> deleteUser(@PathVariable Long userId) {
-        System.out.println("===> Delete User Executed");
         userService.deleteUser(userId);
         HashMap responseMessage = new HashMap();
         responseMessage.put("Status", "User with ID " + userId + " was successfully deleted.");
@@ -37,19 +35,16 @@ public class UserController {
 
     @PostMapping("/users/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest){
-        System.out.println("calling loginUser");
         return userService.loginUser(loginRequest);
     }
 
-    @PostMapping("/api/profile")
+    @PostMapping("/users/profile")
     public User createProfile(@RequestBody UserProfile newProfile) {
-        System.out.println("calling createProfile ==>");
         return userService.createProfile(newProfile);
     }
 
-    @PutMapping("/api/profile/update")
+    @PutMapping("/users/profile/update")
     public UserProfile updateProfile(@RequestBody UserProfile newProfile) {
-        System.out.println("calling createProfile ==>");
         return userService.updateProfile(newProfile);
     }
 }

@@ -21,6 +21,9 @@ public class UserProfile {
     @Column
     private String profileDescription;
 
+    @Column
+    private boolean isAdmin;
+
     @JsonIgnore
     @OneToOne(mappedBy = "userProfile") // LIKE THIS AS IT"S NON-OWNING SIDE
     private User user;
@@ -33,6 +36,7 @@ public class UserProfile {
         this.firstName = firstName;
         this.lastName = lastName;
         this.profileDescription = profileDescription;
+        this.isAdmin = false;
     }
 
     public Long getId() {
@@ -84,5 +88,13 @@ public class UserProfile {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 }

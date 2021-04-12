@@ -1,6 +1,7 @@
 package com.sei.redditlikeapi.service;
 
 import com.sei.redditlikeapi.exception.InformationExistException;
+import com.sei.redditlikeapi.exception.InformationForbidden;
 import com.sei.redditlikeapi.exception.InformationNotFoundException;
 import com.sei.redditlikeapi.model.User;
 import com.sei.redditlikeapi.model.UserProfile;
@@ -9,13 +10,10 @@ import com.sei.redditlikeapi.model.response.LoginResponse;
 import com.sei.redditlikeapi.repository.ProfileRepository;
 import com.sei.redditlikeapi.repository.UserRepository;
 import com.sei.redditlikeapi.security.JWTUtils;
-import com.sei.redditlikeapi.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,8 +40,9 @@ public class UserService {
     @Autowired
     private JWTUtils jwtUtils;
 
+    UtilityService utility = new UtilityService();
+
     public User createUser(User userObject){
-        System.out.println(" ===> SERVICE: Create User Executed ");
         if (!userRepository.existsByEmailAddress(userObject.getEmailAddress())){
             if ((userRepository.existsByUserName(userObject.getUserName())))
                 throw new InformationExistException("User with Username '" + userObject.getUserName() +
@@ -58,9 +57,12 @@ public class UserService {
 
     // using to test if deletes user
     public void deleteUser(Long userId){
-        System.out.println(" ===> SERVICE: Delete User Executed ");
+        User currentUser = utility.getAuthenticatedUser();
         if (userRepository.findById(userId).isPresent())
-            userRepository.deleteById(userId);
+            if (utility.isUserAdmin(currentUser))
+                userRepository.deleteById(userId);
+            else
+                throw new InformationForbidden("You cannot delete users as you don't have admin role");
         else
             throw new InformationNotFoundException("User with ID " + userId + " not found!");
     }
@@ -70,7 +72,6 @@ public class UserService {
     }
 
     public ResponseEntity<?> loginUser(LoginRequest loginRequest){
-        System.out.println(" ===> SERVICE: loginUser executed");
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmailAddress(), loginRequest.getPassword()));
@@ -84,30 +85,25 @@ public class UserService {
     }
 
     public User createProfile(UserProfile newProfile){
-        System.out.println(" ===> SERVICE: createProfile executed");
-        MyUserDetails userDetails =
-                (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (userDetails.getUser().getUserProfile() == null) {
-            User user = userDetails.getUser();
-            user.setUserProfile(newProfile);
-            return userRepository.save(user);
+        User currentUser = utility.getAuthenticatedUser();
+        if (currentUser.getUserProfile() == null) {
+            currentUser.setUserProfile(newProfile);
+            return userRepository.save(currentUser);
         }
         else
-            throw new InformationExistException("User profile for User with ID " + userDetails.getUser().getId() +
+            throw new InformationExistException("User profile for User with ID " + currentUser.getId() +
                     " already exists.");
     }
 
     public UserProfile updateProfile(UserProfile newProfile){
-        System.out.println(" ===> SERVICE: updateProfile executed");
-        MyUserDetails userDetails =
-                (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (userDetails.getUser().getUserProfile() != null) {
-            Long id = userDetails.getUser().getUserProfile().getId();
+        User currentUser = utility.getAuthenticatedUser();
+        if (currentUser.getUserProfile() != null) {
+            Long id = currentUser.getUserProfile().getId();
             newProfile.setId(id);
             return profileRepository.save(newProfile);
         }
         else
             throw new InformationNotFoundException("User profile doesn't exist for User with ID " +
-                    userDetails.getUser().getId());
+                   currentUser.getId());
     }
 }

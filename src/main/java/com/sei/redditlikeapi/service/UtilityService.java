@@ -1,10 +1,8 @@
 package com.sei.redditlikeapi.service;
 
-import com.sei.redditlikeapi.exception.TokenExpiredException;
 import com.sei.redditlikeapi.model.User;
 import com.sei.redditlikeapi.repository.TopicRepository;
 import com.sei.redditlikeapi.security.MyUserDetails;
-import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 //Here different helpful methods will be stored which can be used all around the services
@@ -13,6 +11,12 @@ public class UtilityService {
     public User getAuthenticatedUser() {
             MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return userDetails.getUser();
+    }
+
+    public boolean isUserAdmin(User user){
+        if (user.getUserProfile() != null)
+            return user.getUserProfile().isAdmin();
+        return false;
     }
 
     //Will check if topic exists by name
