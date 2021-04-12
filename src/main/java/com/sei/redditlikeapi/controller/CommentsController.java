@@ -24,5 +24,10 @@ public class CommentsController {
         return commentService.createComment(topicId, articleId, commentObject);
     }
 
+    @PutMapping("/comments/{commentId}")
+    public Comment updateComment(@PathVariable Long topicId, @PathVariable Long articleId, @PathVariable Long commentId, @RequestBody Comment commentObject){
+        return commentService.updateComment(topicId, articleId, commentId, commentObject);
+    }
+
 
 }

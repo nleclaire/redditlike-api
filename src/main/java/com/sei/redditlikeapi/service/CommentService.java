@@ -38,12 +38,22 @@ public class CommentService {
         } else {
             throw new InformationNotFoundException("Cannot find topic or article");
         }
+    }
 
+    public Comment updateComment(Long topicId, Long articleId, Long commentId, Comment commentObject){
+        Optional<Topic> topic = topicRepository.findById(topicId);
+        Optional<Article> article = articleRepository.findById(articleId);
+        Comment comment = commentRepository.findById(commentId).get();
 
-//        if (commentRepository.findById(commentObject.getId()).isPresent()){
-//            throw new InformationExistException("Comment already exists");
-//        } else {
-//            return commentRepository.save(commentObject);
-//        }
+        if (topic.isPresent() && article.isPresent()){
+            if (commentRepository.findById(commentId).isPresent()){
+                comment.setTextContent(commentObject.getTextContent());
+                return commentRepository.save(comment);
+            } else {
+                throw new InformationNotFoundException("Cannot find topic or article");
+            }
+        } else {
+            throw new InformationNotFoundException("Cannot find topic or article");
+        }
     }
 }
