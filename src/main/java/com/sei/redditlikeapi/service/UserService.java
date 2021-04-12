@@ -55,9 +55,9 @@ public class UserService {
             System.out.println("DATE" + new Date(System.currentTimeMillis()));
             userObject.setPasswordChangedTime(new Date(System.currentTimeMillis()));
             System.out.println("DATE 2: " + userObject.getPasswordChangedTime());
-            if (userObject.getSecretQuestion() == null)
+            if (userObject.getWhoShotFirst() == null)
                 return userRepository.save(userObject.toUser(false));
-            else if (userObject.getSecretQuestion().equals("some answer"))
+            else if (userObject.getWhoShotFirst().equals("Han"))
                 return userRepository.save(userObject.toUser(true));
             else
                 return userRepository.save(userObject.toUser(false));

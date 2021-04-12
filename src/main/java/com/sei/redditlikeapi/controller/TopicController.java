@@ -49,32 +49,4 @@ public class TopicController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/topics/{topicId}/articles")
-    public Article createArticle(@PathVariable Long topicId, @RequestBody Article articleObject){
-        return topicService.createArticle(topicId, articleObject);
-    }
-
-    @GetMapping("/topics/{topicId}/articles")
-    public List<Article> getArticles(@PathVariable Long topicId){
-        return topicService.getArticles(topicId);
-    }
-
-    @GetMapping("/topics/{topicId}/articles/{articleId}")
-    public Article getArticle(@PathVariable Long topicId, @PathVariable Long articleId){
-        return topicService.getArticle(topicId, articleId);
-    }
-
-    @PutMapping("/topics/{topicId}/articles/{articleId}")
-    public Article updateArticle(@PathVariable Long topicId, @PathVariable Long articleId, @RequestBody Article articleObject){
-        return topicService.updateArticle(topicId, articleId, articleObject);
-    }
-
-    @DeleteMapping("/topics/{topicId}/articles/{articleId}")
-    public ResponseEntity<HashMap> deleteTopic(@PathVariable Long topicId, @PathVariable Long articleId){
-        topicService.deleteArticle(topicId, articleId);
-        HashMap response = new HashMap();
-        response.put("Response", "Article with id " + articleId + " has been deleted");
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
 }

@@ -31,7 +31,7 @@ public class UserController {
         userService.deleteUser(userId);
         HashMap responseMessage = new HashMap();
         responseMessage.put("Status", "User with ID " + userId + " was successfully deleted.");
-        return new ResponseEntity<HashMap>(responseMessage, HttpStatus.BAD_GATEWAY);
+        return new ResponseEntity<HashMap>(responseMessage, HttpStatus.OK);
     }
 
     @PostMapping("/users/login")

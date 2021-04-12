@@ -20,7 +20,7 @@ public class UtilityService {
     }
 
     public boolean isUserAdmin(User user){
-        return user!=null ? user.isAdmin() : false;
+        return user!=null ? user.getIsAdmin() : false;
     }
 
     //Will check if topic exists by name

@@ -35,7 +35,7 @@ public class User {
     private Date passwordChangedTime;
 
     @Column
-    private boolean isAdmin;
+    private boolean isAdmin = false;
 
     //User has single profile
     @OneToOne(cascade = CascadeType.ALL) //Fetch the record from user profile
@@ -52,7 +52,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Article> commentList;
+    private List<Comment> commentList;
 
     public User() {
     }
@@ -123,15 +123,16 @@ public class User {
         return articleList;
     }
 
-    public List<Article> getCommentList() {
+    public List<Comment> getCommentList() {
         return commentList;
     }
-    public boolean isAdmin() {
+
+    public boolean getIsAdmin() {
         return isAdmin;
     }
 
     public void setAdmin(boolean admin) {
-        isAdmin = admin;
+        this.isAdmin = admin;
     }
 
     public boolean isPasswordExpired() {
