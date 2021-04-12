@@ -22,7 +22,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
     private MyUserDetailsService myUserDetailsService;
     private String[] publicEndpoints = {"/auth/users/register", "/api/hello", "/auth/users/login",
-            "/api/topics", "/api/topics/{topicId}", "/api/topics/{topicId}/articles",
+            "/api/topics/", "/api/topics/{topicId}", "/api/topics/{topicId}/articles",
             "/api/topics/{topicId}/articles/{articleId}"};
 
     @Autowired

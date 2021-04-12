@@ -41,6 +41,8 @@ public class TopicService {
 
     public Topic createTopic(Topic topicObject) {
         User currentUser = utility.getAuthenticatedUser();
+        if (currentUser==null)
+            throw new InformationForbidden("FORBIDDEN");
         if (utility.checkIfUserTopicExists(topicRepository, currentUser.getId(), topicObject.getName()))
             throw new InformationExistException("Topic with name " + topicObject.getName() +
                     " was already created by user: " + currentUser.getEmailAddress());
@@ -70,6 +72,7 @@ public class TopicService {
 
     public void deleteTopic(Long topicId) {
         User currentUser = utility.getAuthenticatedUser();
+        System.out.println(currentUser);
         if (topicRepository.findById(topicId).isPresent()) {
             if (utility.checkIfUserTopicExists(topicRepository, topicId, currentUser.getId())
                     || utility.isUserAdmin(currentUser))
