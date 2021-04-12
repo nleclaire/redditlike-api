@@ -25,16 +25,25 @@ public class TopicController {
         return topicService.getTopics();
     }
 
+    //PUBLIC endpoint, everybody can have access
+    @GetMapping("/topics/{topicId}")
+    public Topic getTopic(@PathVariable Long topicId){
+        return topicService.getTopic(topicId);
+    }
+
+    //PRIVATE endpoint, registered users can have access
     @PostMapping("/topics/new")
     public Topic createTopic(@RequestBody Topic topicObject){
         return topicService.createTopic(topicObject);
     }
 
+    //PRIVATE endpoint, registered users can have access to their own topics only
     @PutMapping("/topics/{topicId}")
     public Topic updateTopic(@PathVariable Long topicId, @RequestBody Topic topicObject){
         return topicService.updateTopic(topicId, topicObject);
     }
 
+    //PRIVATE endpoint, registered users can have access to their own topics only
     @DeleteMapping("/topics/{topicId}")
     public ResponseEntity<HashMap> deleteTopic(@PathVariable Long topicId){
         topicService.deleteTopic(topicId);

@@ -32,6 +32,13 @@ public class TopicService {
             return topicRepository.findAll();
     }
 
+    public Topic getTopic(Long id) {
+        if (topicRepository.findById(id).isEmpty()) {
+            throw new InformationNotFoundException("Topic with ID " + id + " doesn't exist!");
+        } else
+            return topicRepository.findById(id).get();
+    }
+
     public Topic createTopic(Topic topicObject) {
         User currentUser = utility.getAuthenticatedUser();
         if (utility.checkIfUserTopicExists(topicRepository, currentUser.getId(), topicObject.getName()))
@@ -76,12 +83,17 @@ public class TopicService {
     public Article createArticle(Long topicId, Article articleObject) {
         User currentUser = utility.getAuthenticatedUser();
         Optional<Topic> topic = topicRepository.findById(topicId);
-        if (articleRepository.findByIdAndTitle(articleObject.getId(), articleObject.getTitle()) != null)
-            throw new InformationExistException("Article with id " + articleObject.getId() + " already exists!");
+        if (topic.isPresent()) {
+            if (articleRepository.findByIdAndTitle(articleObject.getId(), articleObject.getTitle()) != null)
+                throw new InformationExistException("Article with id " + articleObject.getId() + " already exists!");
+            else {
+                articleObject.setTopic(topic.get());
+                articleObject.setUser(currentUser);
+                return articleRepository.save(articleObject);
+            }
+        }
         else
-            articleObject.setTopic(topic.get());
-        articleObject.setUser(currentUser);
-        return articleRepository.save(articleObject);
+            throw new InformationNotFoundException("Topic with ID " + topicId + " doesn't exist");
     }
 
     public List<Article> getArticles(Long topicId) {
