@@ -26,7 +26,7 @@ public class UtilityService {
     }
 
     //Will check if topic exists related to User topics by id
-    public boolean checkIfUserTopicExists(TopicRepository repository, Long userId, Long topicId){
+    public boolean checkIfUserTopicExists(TopicRepository repository,Long topicId, Long userId){
         return repository.findByIdAndUserId(topicId,userId) != null ? true : false;
     }
 

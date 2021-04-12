@@ -62,11 +62,15 @@ public class TopicService {
     }
 
     public void deleteTopic(Long topicId) {
-        Optional<Topic> topic = topicRepository.findById(topicId);
-        if (topic.isEmpty())
-            throw new InformationNotFoundException("Topic with id " + topicId + " doesn't exist!");
+        User currentUser = utility.getAuthenticatedUser();
+        if (topicRepository.findById(topicId).isPresent()) {
+            if (utility.checkIfUserTopicExists(topicRepository, topicId,currentUser.getId()))
+                topicRepository.deleteById(topicId);
+            else
+                throw new InformationForbidden("You're not allowed to delete topic with id " + topicId);
+        }
         else
-            topicRepository.deleteById(topicId);
+            throw new InformationNotFoundException("Topic with ID " + topicId + " doesn't exist");
     }
 
     public Article createArticle(Long topicId, Article articleObject) {
