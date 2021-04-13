@@ -9,6 +9,7 @@ import com.sei.redditlikeapi.repository.CommentRepository;
 import com.sei.redditlikeapi.repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Date;
 import java.util.List;
@@ -107,5 +108,17 @@ public class CommentService {
             commentRepository.deleteById(commentId);
         else
             throw new InformationForbidden("You must be the original poster or an admin to delete this comment!");
+    }
+
+    public List<Comment> getChildComments(Long topicId, Long articleId, Long commentId){
+        return this.getArticleComment(topicId,articleId,commentId).getChildrenComments();
+    }
+
+    public Comment createChildComment(Long topicId, Long articleId,
+                                      Long commentId, Comment commentObject) {
+        Comment parent = this.getArticleComment(topicId,articleId,commentId);
+        commentObject.setParentComment(parent);
+        Comment currentNewComment = this.createComment(topicId,articleId,commentObject);
+        return currentNewComment;
     }
 }
