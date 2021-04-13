@@ -15,9 +15,15 @@ A RESTful API written in Java made for sharing articles.
 | DELETE | /api/topics/{topicId} | Delete a single topic w/ id |
 | GET | /api/topics/{topicId}/articles | Get all articles for single topic w/ id |
 | POST | /api/topics/{topicId}/articles | Create a new article in the given topic |
-| GET | /api/topics/{topicId}/articles/<span style="color:orange">{articleId}</span> | List single article in specified topic by Id |
-| PUT | /api/topics/{topicId}/articles/<span style="color:orange">{articleId}</span> | Update single article in specified topic by Id |
-| DELETE | /api/topics/{topicId}/articles/<span style="color:orange">{articleId}</span> | Delete single article in specified topic by Id |
+| GET | /api/topics/{topicId}/articles/{articleId} | List single article in specified topic by Id |
+| PUT | /api/topics/{topicId}/articles/{articleId} | Update single article in specified topic by Id |
+| DELETE | /api/topics/{topicId}/articles/{articleId} | Delete single article in specified topic by Id |
+| GET | /api/topics/{topicId}/articles/{articleId}/comments | List all comments under a single article |
+| POST | /api/topics/{topicId}/articles/{articleId}/comments | Create new comment under given article |
+| GET | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Get a single comment under a single article |
+| PUT | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Update comment under given article |
+| DELETE | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Delete comment under given article |
+
 | POST | /auth/users/register | Registers a new user |
 | POST | /auth/users/login | Logs a user in |
 
