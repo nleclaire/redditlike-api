@@ -23,7 +23,6 @@ A RESTful API written in Java made for sharing articles.
 | GET | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Get a single comment under a single article |
 | PUT | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Update comment under given article |
 | DELETE | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Delete comment under given article |
-
 | POST | /auth/users/register | Registers a new user |
 | POST | /auth/users/login | Logs a user in |
 
@@ -142,8 +141,11 @@ Happy chatting!
 
 ---
 
+## Required HTTP Request Body Format
+
 ### GET /api/topics
-- no parameters required
+
+- No body required
 
 ### POST /api/topics
 ```json
@@ -230,3 +232,22 @@ Note that it will automatically generate an Id for you
 
 - No body necessary
 
+### POST /auth/users/register
+
+```json
+{
+	"userName" : "YOUR_USERNAME",
+	"emailAddress" : "YOUR_EMAIL@email.com",
+	"password" : "12345"
+}
+```
+
+### POST /auth/users/login
+
+```json
+{
+	"userName" : "YOUR_USERNAME",
+	"emailAddress" : "YOUR_EMAIL@email.com",
+	"password" : "12345"
+}
+```
