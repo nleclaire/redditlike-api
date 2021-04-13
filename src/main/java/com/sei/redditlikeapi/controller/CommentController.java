@@ -12,13 +12,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/topics/{topicId}/articles/{articleId}")
-public class CommentsController {
+public class CommentController {
     @Autowired
     private CommentService commentService;
 
     @GetMapping("/comments")
-    public List<Comment> getComments(@PathVariable Long topicId, @PathVariable Long articleId){
-        return commentService.getComments();
+    public List<Comment> getArticleComments(@PathVariable Long topicId, @PathVariable Long articleId){
+        return commentService.getArticleComments(topicId,articleId);
+    }
+
+    @GetMapping("/comments/{commentId}")
+    public Comment getArticleComment(@PathVariable Long topicId, @PathVariable Long articleId, @PathVariable Long commentId){
+        return commentService.getArticleComment(topicId,articleId,commentId);
     }
 
     @PostMapping("/comments")
