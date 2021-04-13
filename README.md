@@ -122,8 +122,8 @@ Finally, we're ready to talk about Lunch. Hit Send.
 ```json
 {
     "id": 4,
-    "name": "Breakfast",
-    "description": "mmm cereal",
+    "name": "Lunch",
+    "description": "My favorite meal of the day!",
     "articleList": null
 }
 ```
@@ -132,4 +132,51 @@ Finally, we're ready to talk about Lunch. Hit Send.
 If you've made it up to this point, you should be able to navigate the rest of the API with no problem.
 
 Happy chatting!
+
+
+---
+
+### GET /api/topics
+- no parameters required
+
+### POST /api/topics
+```json
+{
+  "title" : "Lunch",
+  "description" : "A place to talk about lunch"
+}
+```
+Note that an id will automatically be generated for you when you
+send a POST request
+
+### GET /api/topics/{topicId}
+
+- need to pass specified topic Id in the URL
+
+### PUT /api/topics/{topicId}
+```json
+{
+  "title" : "Updated title",
+  "description" : "Updated description"
+}
+```
+
+### DELETE /api/topics/{topicId}
+
+- Not necessary to pass a body, just an Id in the URL
+
+### GET /api/topics/{topicId}/articles
+
+- Not necessary to pass a body
+
+### POST /api/topics/{topicId}/articles/{articleId}
+
+```json
+{
+  "title" : "some title",
+  "textContent" : "some text"
+}
+```
+
+### GET /api/topics/{topicId}/articles/{articleId}
 
