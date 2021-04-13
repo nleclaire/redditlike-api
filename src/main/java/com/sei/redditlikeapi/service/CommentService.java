@@ -102,7 +102,7 @@ public class CommentService {
         if (commentRepository.findById(commentId).get().getArticle().getId() != articleId)
             throw new InformationNotFoundException("Comment with ID " + commentId + " is in a different article");
         Comment currentComment = commentRepository.findById(commentId).get();
-        if (currentComment.getUser().getId() != currentUser.getId() || utility.isUserAdmin(currentUser)
+        if ((currentComment.getUser().getId() == currentUser.getId())|| utility.isUserAdmin(currentUser)
             || (currentUser.getId() == currentComment.getArticle().getUser().getId()))
             commentRepository.deleteById(commentId);
         else
