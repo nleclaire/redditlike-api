@@ -1,6 +1,8 @@
-package com.sei.redditlikeapi.model;
+package com.sei.redditlikeapi.utilities;
 
-public class UserAdminHint extends User{
+import com.sei.redditlikeapi.model.User;
+
+public class UserAdminHint extends User {
 
     private String whoShotFirst;
 

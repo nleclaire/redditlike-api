@@ -1,6 +1,7 @@
 package com.sei.redditlikeapi.controller;
 import com.sei.redditlikeapi.model.User;
-import com.sei.redditlikeapi.model.UserAdminHint;
+import com.sei.redditlikeapi.utilities.PasswordChange;
+import com.sei.redditlikeapi.utilities.UserAdminHint;
 import com.sei.redditlikeapi.model.UserProfile;
 import com.sei.redditlikeapi.model.request.LoginRequest;
 import com.sei.redditlikeapi.service.UserService;
@@ -9,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.HashMap;
 
 @RestController
@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @PutMapping("/users/login/changepassword")
-    public User changePassword(@RequestBody String newPassword) {
+    public User changePassword(@RequestBody PasswordChange newPassword) {
         return userService.changePassword(newPassword);
     }
 }

@@ -4,7 +4,8 @@ import com.sei.redditlikeapi.exception.InformationExistException;
 import com.sei.redditlikeapi.exception.InformationForbidden;
 import com.sei.redditlikeapi.exception.InformationNotFoundException;
 import com.sei.redditlikeapi.model.User;
-import com.sei.redditlikeapi.model.UserAdminHint;
+import com.sei.redditlikeapi.utilities.PasswordChange;
+import com.sei.redditlikeapi.utilities.UserAdminHint;
 import com.sei.redditlikeapi.model.UserProfile;
 import com.sei.redditlikeapi.model.request.LoginRequest;
 import com.sei.redditlikeapi.model.response.LoginResponse;
@@ -114,11 +115,17 @@ public class UserService {
                     currentUser.getId());
     }
 
-    public User changePassword(String newPassword) {
+    public User changePassword(PasswordChange passInfo) {
         User currentUser = utility.getAuthenticatedUser();
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        currentUser.setPassword(encodedPassword);
-        currentUser.setPasswordChangedTime(new Date(System.currentTimeMillis()));
-        return userRepository.save(currentUser);
+        if (passInfo.isNotNull())
+            if (passwordEncoder.matches(passInfo.getOldPassword(), currentUser.getPassword())) {
+                currentUser.setPassword(passwordEncoder.encode(passInfo.getNewPassword()));
+                currentUser.setPasswordChangedTime(new Date(System.currentTimeMillis()));
+                return userRepository.save(currentUser);
+            }
+            else
+                throw new InformationForbidden("Passwords do not match!");
+        else
+            throw new InformationNotFoundException("Wrong input provided");
     }
 }

@@ -23,7 +23,9 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     private MyUserDetailsService myUserDetailsService;
     private String[] publicEndpoints = {"/auth/users/register", "/api/hello", "/auth/users/login",
             "/api/topics", "/api/topics/{topicId}", "/api/topics/{topicId}/articles",
-            "/api/topics/{topicId}/articles/{articleId}"};
+            "/api/topics/{topicId}/articles/{articleId}", "/api/topics/{topicId}/articles/{articleId}/comments",
+            "/api/topics/{topicId}/articles/{articleId}/comments/{commentId}"
+    };
 
     @Autowired
     private JWTRequestFilter jwtRequestFilter;
