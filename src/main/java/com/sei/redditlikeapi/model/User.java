@@ -12,9 +12,8 @@ import java.util.List;
 @Entity
 @Table(name="users")
 public class User {
-
     private static final long PASSWORD_EXPIRATION_TIME
-            = 1L;    // 30 days
+            =  30L * 24L * 60L * 60L * 1000L;    // 30 days 
 
     @Id
     @Column
@@ -32,6 +31,7 @@ public class User {
     private String password;
 
     @Column(name = "password_changed_time")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date passwordChangedTime;
 
     @Column
@@ -57,11 +57,12 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String userName, String emailAddress, String password) {
+    public User(Long id, String userName, String emailAddress, String password, Date passwordChangedTime) {
         this.id = id;
         this.userName = userName;
         this.emailAddress = emailAddress;
         this.password = password;
+        this.passwordChangedTime = passwordChangedTime;
         this.isAdmin = false;
     }
 

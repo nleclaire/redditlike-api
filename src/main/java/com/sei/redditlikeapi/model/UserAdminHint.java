@@ -8,7 +8,7 @@ public class UserAdminHint extends User{
     }
 
     public User toUser(Boolean admin){
-        User returnUser = new User(this.getId(), this.getUserName(), this.getEmailAddress(), this.getPassword());
+        User returnUser = new User(this.getId(), this.getUserName(), this.getEmailAddress(), this.getPassword(),getPasswordChangedTime());
         returnUser.setAdmin(admin);
         return returnUser;
     }
