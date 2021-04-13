@@ -202,3 +202,31 @@ Note that it will automatically generate an Id for you
 
 - Delete the specified article
 
+### GET /api/topics/{topicID}/articles/{articleId}/comments
+
+- No body necessary
+
+### POST /api/topics/{topicID}/articles/{articleId}/comments
+
+```json
+{
+  "textContent" : "some text"
+}
+```
+
+### GET /api/topics/{topicID}/articles/{articleId}/comments/{commentId}
+
+- No body necessary
+
+### PUT /api/topics/{topicID}/articles/{articleId}/comments/{commentId}
+
+```json
+{
+  "textContent" : "updated text"
+}
+```
+
+### DELETE /api/topics/{topicID}/articles/{articleId}/comments/{commentId}
+
+- No body necessary
+
