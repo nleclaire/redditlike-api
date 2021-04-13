@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name="users")
 public class User {
     private static final long PASSWORD_EXPIRATION_TIME
-            =  30L * 24L * 60L * 60L * 1000L;    // 30 days 
+            =  30L * 24L * 60L * 60L * 1000L;    // 30 days
 
     @Id
     @Column

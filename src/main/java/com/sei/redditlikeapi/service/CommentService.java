@@ -33,6 +33,35 @@ public class CommentService {
         return commentRepository.findAll();
     }
 
+    public Comment getComment(Long commentID){
+        if (commentRepository.findById(commentID).isEmpty()) {
+            throw new InformationNotFoundException("Comment with ID " + commentID + " doesn't exist!");
+        } else
+            return commentRepository.findById(commentID).get();
+    }
+
+    public List<Comment> getArticleComments(Long articleID){
+        if (articleRepository.findById(articleID).isEmpty()) {
+            throw new InformationNotFoundException("Article with ID " + articleID + " doesn't exist!");
+        } else
+            return articleRepository.findById(articleID).get().getCommentList();
+    }
+
+    public Comment getArticleComment(Long articleID, Long commentID){
+        if (articleRepository.findById(articleID).isEmpty()) {
+            throw new InformationNotFoundException("Article with ID " + articleID + " doesn't exist!");
+        } else
+            if (commentRepository.findById(commentID).isEmpty())
+                throw new InformationNotFoundException("Comment with ID " + commentID + " doesn't exist in article" +
+                        " with ID" + articleID + "!");
+            else
+                if (commentRepository.findById(commentID).get().getArticle().getId() == articleID)
+                    return commentRepository.findById(commentID).get();
+                else
+                    throw new InformationNotFoundException("Comment with ID " + commentID + " is not in a " +
+                            "different article");
+    }
+
     public Comment createComment(Long topicId, Long articleId, Comment commentObject){
         Optional<Topic> topic = topicRepository.findById(topicId);
         Optional<Article> article = articleRepository.findById(articleId);
@@ -69,14 +98,13 @@ public class CommentService {
         Optional<Article> article = articleRepository.findById(articleId);
 
         if (comment.isPresent() && topic.isPresent() && article.isPresent()){
-            if(utility.isUserAdmin(user) || comment.get().getUser() == user){
+            if(utility.isUserAdmin(user) || comment.get().getUser() == user)
                 commentRepository.deleteById(commentId);
-            } else {
+             else
                 throw new InformationForbidden("You must be the original poster or an admin to delete this comment!");
-            }
-        } else {
+        } else
             throw new InformationNotFoundException("Comment with id " + commentId + " not found!");
-        }
+
 
     }
 

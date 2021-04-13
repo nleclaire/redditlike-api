@@ -52,9 +52,7 @@ public class UserService {
                 throw new InformationExistException("User with Username '" + userObject.getUserName() +
                         "' already exists");
             userObject.setPassword(passwordEncoder.encode(userObject.getPassword()));
-            System.out.println("DATE" + new Date(System.currentTimeMillis()));
             userObject.setPasswordChangedTime(new Date(System.currentTimeMillis()));
-            System.out.println("DATE 2: " + userObject.getPasswordChangedTime());
             if (userObject.getWhoShotFirst() == null)
                 return userRepository.save(userObject.toUser(false));
             else if (userObject.getWhoShotFirst().equals("Han"))

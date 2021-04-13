@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 
 @RestController
@@ -49,8 +50,8 @@ public class UserController {
         return userService.updateProfile(newProfile);
     }
 
-    @PostMapping ("/users/login/changepass")
-    public User changePassword(@RequestBody String newPassword){
+    @PutMapping("/users/login/changepassword")
+    public User changePassword(@RequestBody String newPassword) {
         return userService.changePassword(newPassword);
     }
 }
