@@ -177,6 +177,22 @@ send a POST request
   "textContent" : "some text"
 }
 ```
+Note that it will automatically generate an Id for you
 
 ### GET /api/topics/{topicId}/articles/{articleId}
+
+- Not necessary to have a body
+
+### PUT /api/topics/{topicId}/articles/{articleId}
+
+```json
+{
+  "title" : "updated title",
+  "textContent" : "updated text"
+}
+```
+
+### DELETE /api/topics/{topicId}/articles/{articleId}
+
+- Delete the specified article
 
