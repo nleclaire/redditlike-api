@@ -1,4 +1,5 @@
 package com.sei.redditlikeapi.controller;
+import com.sei.redditlikeapi.exception.InformationNotFoundException;
 import com.sei.redditlikeapi.model.User;
 import com.sei.redditlikeapi.utilities.PasswordChange;
 import com.sei.redditlikeapi.utilities.UserAdminHint;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -50,8 +52,23 @@ public class UserController {
         return userService.updateProfile(newProfile);
     }
 
+    @GetMapping("/users/profile")
+    public UserProfile getProfile(){
+        return userService.getProfile();
+    }
+
+    @GetMapping("users/profile/all")
+    public List<UserProfile> getAllUserProfiles(){
+        return userService.getAllUserProfiles();
+    }
+
     @PutMapping("/users/login/changepassword")
     public User changePassword(@RequestBody PasswordChange newPassword) {
         return userService.changePassword(newPassword);
+    }
+
+    @GetMapping("/users")
+    public List<User> getAllUsers(){
+        return userService.getAllUsers();
     }
 }

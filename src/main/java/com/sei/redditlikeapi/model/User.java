@@ -116,17 +116,17 @@ public class User {
         this.userProfile = userProfile;
     }
 
-    public List<Topic> getTopicList() {
-        return topicList;
-    }
+//    public List<Topic> getTopicList() {
+//        return topicList;
+//    }
 
-    public List<Article> getArticleList() {
-        return articleList;
-    }
+// //   public List<Article> getArticleList() {
+//        return articleList;
+//    }
 
-    public List<Comment> getCommentList() {
-        return commentList;
-    }
+//    public List<Comment> getCommentList() {
+//        return commentList;
+//    }
 
     public boolean getIsAdmin() {
         return isAdmin;

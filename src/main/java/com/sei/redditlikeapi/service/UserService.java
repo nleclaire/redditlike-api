@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -115,6 +116,21 @@ public class UserService {
                     currentUser.getId());
     }
 
+    public UserProfile getProfile(){
+        User currentUser = utility.getAuthenticatedUser();
+        if (currentUser.getUserProfile() != null)
+            return profileRepository.findByUserId(currentUser.getId());
+         else
+            throw new InformationNotFoundException("User profile doesn't exist for User with ID " +
+                    currentUser.getId());
+    }
+
+    public List<UserProfile> getAllUserProfiles(){
+        if (profileRepository.findAll().isEmpty())
+            throw new InformationNotFoundException("No profiles set up yet!");
+        return profileRepository.findAll();
+    }
+
     public User changePassword(PasswordChange passInfo) {
         User currentUser = utility.getAuthenticatedUser();
         if (passInfo.isNotNull())
@@ -127,5 +143,9 @@ public class UserService {
                 throw new InformationForbidden("Passwords do not match!");
         else
             throw new InformationNotFoundException("Wrong input provided");
+    }
+
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
     }
 }
