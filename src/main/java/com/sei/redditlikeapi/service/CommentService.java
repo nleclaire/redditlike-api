@@ -48,7 +48,7 @@ public class CommentService {
         utility.errorIfRepositoryElementNotExistById(articleRepository,articleId,"Article");
         if (articleRepository.findById(articleId).get().getTopic().getId() != topicId)
             throw new InformationNotFoundException("Article with ID " + articleId + " is in a different topic");
-        return articleRepository.findById(articleId).get().getCommentList();
+        return commentRepository.findByParentCommentIsNullAndArticleId(articleId);
     }
 
     //Public USER
@@ -117,8 +117,6 @@ public class CommentService {
     public Comment createChildComment(Long topicId, Long articleId,
                                       Long commentId, Comment commentObject) {
         Comment parent = this.getArticleComment(topicId,articleId,commentId);
-        commentObject.setArticle(articleRepository.findById(articleId).get());
-        System.out.println(commentObject.getTextContent());
         commentObject.setParentComment(parent);
         Comment currentNewComment = this.createComment(topicId,articleId,commentObject);
         return commentRepository.save(parent);
