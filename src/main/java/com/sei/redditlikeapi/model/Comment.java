@@ -3,7 +3,9 @@ package com.sei.redditlikeapi.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="comments")
@@ -28,6 +30,14 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name="article_id")
     private Article article;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "parent_id")
+    private Comment parentComment;
+
+    @OneToMany(mappedBy="parentComment", cascade = CascadeType.ALL)
+    private List<Comment> childrenComments = new ArrayList<>();
 
 
     public Comment() {
@@ -85,5 +95,21 @@ public class Comment {
 
     public void setArticle(Article article) {
         this.article = article;
+    }
+
+    public Comment getParentComment() {
+        return parentComment;
+    }
+
+    public void setParentComment(Comment parentComment) {
+        this.parentComment = parentComment;
+    }
+
+    public List<Comment> getChildrenComments() {
+        return childrenComments;
+    }
+
+    public void setChildrenComments(List<Comment> childrenComments) {
+        this.childrenComments = childrenComments;
     }
 }

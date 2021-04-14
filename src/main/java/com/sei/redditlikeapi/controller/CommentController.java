@@ -44,4 +44,14 @@ public class CommentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/comments/{commentId}/thread")
+    public List<Comment> getChildComments(@PathVariable Long topicId, @PathVariable Long articleId, @PathVariable Long commentId){
+        return commentService.getChildComments(topicId,articleId,commentId);
+    }
+
+    @PostMapping("/comments/{commentId}")
+    public Comment createChildComment(@PathVariable Long topicId, @PathVariable Long articleId,
+                                      @PathVariable Long commentId, @RequestBody Comment commentObject) {
+        return commentService.createChildComment(topicId,articleId,commentId,commentObject);
+    }
 }
