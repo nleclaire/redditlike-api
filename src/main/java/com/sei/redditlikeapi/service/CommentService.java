@@ -117,8 +117,10 @@ public class CommentService {
     public Comment createChildComment(Long topicId, Long articleId,
                                       Long commentId, Comment commentObject) {
         Comment parent = this.getArticleComment(topicId,articleId,commentId);
+        commentObject.setArticle(articleRepository.findById(articleId).get());
+        System.out.println(commentObject.getTextContent());
         commentObject.setParentComment(parent);
         Comment currentNewComment = this.createComment(topicId,articleId,commentObject);
-        return currentNewComment;
+        return commentRepository.save(parent);
     }
 }

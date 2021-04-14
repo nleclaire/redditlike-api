@@ -31,6 +31,7 @@ public class Comment {
     @JoinColumn(name="article_id")
     private Article article;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
     private Comment parentComment;

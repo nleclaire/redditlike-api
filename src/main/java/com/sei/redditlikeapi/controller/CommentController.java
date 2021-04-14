@@ -51,7 +51,7 @@ public class CommentController {
 
     @PostMapping("/comments/{commentId}")
     public Comment createChildComment(@PathVariable Long topicId, @PathVariable Long articleId,
-                                      @PathVariable Long commentId, Comment commentObject) {
+                                      @PathVariable Long commentId, @RequestBody Comment commentObject) {
         return commentService.createChildComment(topicId,articleId,commentId,commentObject);
     }
 }
