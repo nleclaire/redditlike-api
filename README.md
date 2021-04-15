@@ -218,11 +218,27 @@ Note that it will automatically generate an Id for you
 
 - No body necessary
 
+### GET /api/topics/{topicId}/articles/{articleId}/comments/{commentId}
+
+- No body necessary
+
+### GET GET | /api/topics/{topicId}/articles/{articleId}/comments/{commentId}/thread
+
+- No body necessary
+
 ### POST /api/topics/{topicID}/articles/{articleId}/comments
 
 ```json
 {
   "textContent" : "some text"
+}
+```
+
+### POST | /api/topics/{topicId}/articles/{articleId}/comments/{commentId}
+
+```json
+{
+	"textContent" : "some text"
 }
 ```
 
@@ -252,6 +268,42 @@ Note that it will automatically generate an Id for you
 }
 ```
 
+### GET /auth/users
+
+- No body necessary
+
+### GET /auth/users/profile/all
+
+- No body necessary
+
+### PUT /auth/users/profile
+
+```json
+{
+	"firstName" : "Name",
+	"lastName" : "lastName",
+	"profileDescription" : "some text"
+}
+```
+
+### POST /auth/users/profile
+
+```json
+{
+	"firstName" : "Name",
+	"lastName" : "lastName",
+	"profileDescription" : "some text"
+}
+```
+
+### DELETE /auth/users
+
+- No body necessary
+
+### DELETE /auth/users/profile
+
+- No body necessary
+
 ### POST /auth/users/login
 
 ```json
@@ -261,3 +313,13 @@ Note that it will automatically generate an Id for you
 	"password" : "12345"
 }
 ```
+
+### PUT /auth/users/login/changepassword
+
+```json
+{
+	"oldPassword" : "12345",
+	"newPassword" : "123456"
+}
+```
+
