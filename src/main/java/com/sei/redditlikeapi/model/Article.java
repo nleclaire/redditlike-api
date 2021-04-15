@@ -5,6 +5,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,16 +85,19 @@ public class Article {
                 '}';
     }
 
+    public List<Comment> getCommentList() {
+        if (this.commentList == null)
+            return new ArrayList<>();
+        else
+           return commentList.stream().filter(comment -> comment.getParentComment()==null).collect(Collectors.toList());
+    }
+
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public List<Comment> getCommentList() {
-        return commentList.stream().filter(comment -> comment.getParentComment()==null).collect(Collectors.toList());
     }
 
 
