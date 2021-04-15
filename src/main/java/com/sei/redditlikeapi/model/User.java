@@ -6,11 +6,14 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name="users")
 public class User {
+    private static final long PASSWORD_EXPIRATION_TIME
+            =  30L * 24L * 60L * 60L * 1000L;    // 30 days
 
     @Id
     @Column
@@ -26,6 +29,10 @@ public class User {
     @Column
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  // only allowed to write, not read
     private String password;
+
+    @Column(name = "password_changed_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date passwordChangedTime;
 
     @Column
     private boolean isAdmin = false;
@@ -50,6 +57,7 @@ public class User {
     public User() {
     }
 
+
     public User(String userName, String emailAddress, String password) {
         this.userName = userName;
         this.emailAddress = emailAddress;
@@ -57,11 +65,12 @@ public class User {
         this.isAdmin = false;
     }
 
-    public User(Long id, String userName, String emailAddress, String password) {
+    public User(Long id, String userName, String emailAddress, String password, Date passwordChangedTime) {
         this.id = id;
         this.userName = userName;
         this.emailAddress = emailAddress;
         this.password = password;
+        this.passwordChangedTime = passwordChangedTime;
         this.isAdmin = false;
     }
 
@@ -115,17 +124,17 @@ public class User {
         this.userProfile = userProfile;
     }
 
-    public List<Topic> getTopicList() {
-        return topicList;
-    }
+//    public List<Topic> getTopicList() {
+//        return topicList;
+//    }
 
-    public List<Article> getArticleList() {
-        return articleList;
-    }
+// //   public List<Article> getArticleList() {
+//        return articleList;
+//    }
 
-    public List<Comment> getCommentList() {
-        return commentList;
-    }
+//    public List<Comment> getCommentList() {
+//        return commentList;
+//    }
 
     public boolean getIsAdmin() {
         return isAdmin;
@@ -133,5 +142,22 @@ public class User {
 
     public void setAdmin(boolean admin) {
         this.isAdmin = admin;
+    }
+
+    public boolean isPasswordExpired() {
+        if (this.passwordChangedTime == null) return false;
+
+        long currentTime = System.currentTimeMillis();
+        long lastChangedTime = this.passwordChangedTime.getTime();
+
+        return currentTime > lastChangedTime + PASSWORD_EXPIRATION_TIME;
+    }
+
+    public void setPasswordChangedTime(Date passwordChangedTime) {
+        this.passwordChangedTime = passwordChangedTime;
+    }
+
+    public Date getPasswordChangedTime() {
+        return passwordChangedTime;
     }
 }

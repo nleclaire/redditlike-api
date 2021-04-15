@@ -3,7 +3,9 @@ package com.sei.redditlikeapi.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="comments")
@@ -17,7 +19,7 @@ public class Comment {
     private String textContent;
 
     @Column
-    private LocalDate dateCreated;
+    private Date dateCreated;
 
     @JsonIgnore // Always in the opposite side of the mapping
     @ManyToOne
@@ -28,6 +30,14 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name="article_id")
     private Article article;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "parent_id")
+    private Comment parentComment;
+
+    @OneToMany(mappedBy="parentComment", cascade = CascadeType.ALL)
+    private List<Comment> childrenComments = new ArrayList<>();
 
 
     public Comment() {
@@ -54,11 +64,11 @@ public class Comment {
         this.textContent = description;
     }
 
-    public LocalDate getDateCreated() {
+    public Date getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(LocalDate dateCreated) {
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
 
@@ -85,5 +95,21 @@ public class Comment {
 
     public void setArticle(Article article) {
         this.article = article;
+    }
+
+    public Comment getParentComment() {
+        return parentComment;
+    }
+
+    public void setParentComment(Comment parentComment) {
+        this.parentComment = parentComment;
+    }
+
+    public List<Comment> getChildrenComments() {
+        return childrenComments;
+    }
+
+    public void setChildrenComments(List<Comment> childrenComments) {
+        this.childrenComments = childrenComments;
     }
 }

@@ -1,20 +1,18 @@
 package com.sei.redditlikeapi.service;
 
-import com.sei.redditlikeapi.exception.InformationExistException;
 import com.sei.redditlikeapi.exception.InformationForbidden;
 import com.sei.redditlikeapi.exception.InformationNotFoundException;
-import com.sei.redditlikeapi.model.Article;
 import com.sei.redditlikeapi.model.Comment;
-import com.sei.redditlikeapi.model.Topic;
 import com.sei.redditlikeapi.model.User;
 import com.sei.redditlikeapi.repository.ArticleRepository;
 import com.sei.redditlikeapi.repository.CommentRepository;
 import com.sei.redditlikeapi.repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CommentService {
@@ -29,55 +27,98 @@ public class CommentService {
     @Autowired
     private ArticleRepository articleRepository;
 
-    public List<Comment> getComments(){
-        return commentRepository.findAll();
+//    //ONLY ADMIN can access all comment at the same time
+//    public List<Comment> getComments(){
+//        User user = utility.getAuthenticatedUser();
+//        if (utility.isUserAdmin(user))
+//            return commentRepository.findAll();
+//        else
+//            throw new InformationForbidden("Not an admin");
+//    }
+//
+//    //ONLY ADMIN can access comment through ID within all comments
+//    public Comment getComment(Long commentID){
+//        utility.errorIfRepositoryElementNotExistById(commentRepository,commentID,"Comment");
+//        return commentRepository.findById(commentID).get();
+//    }
+
+    //Public USER
+    public List<Comment> getArticleComments(Long topicId, Long articleId){
+        utility.errorIfRepositoryElementNotExistById(topicRepository,topicId, "Topic");
+        utility.errorIfRepositoryElementNotExistById(articleRepository,articleId,"Article");
+        if (articleRepository.findById(articleId).get().getTopic().getId() != topicId)
+            throw new InformationNotFoundException("Article with ID " + articleId + " is in a different topic");
+        return commentRepository.findByParentCommentIsNullAndArticleId(articleId);
     }
 
+    //Public USER
+    public Comment getArticleComment(Long topicId, Long articleId, Long commentId){
+        utility.errorIfRepositoryElementNotExistById(topicRepository,topicId, "Topic");
+        utility.errorIfRepositoryElementNotExistById(articleRepository,articleId,"Article");
+        utility.errorIfRepositoryElementNotExistById(commentRepository,commentId,"Comment");
+        if (commentRepository.findById(commentId).get().getArticle().getId() == articleId)
+            return commentRepository.findById(commentId).get();
+        else
+            throw new InformationNotFoundException("Comment with ID " + commentId + " is in a different article");
+    }
+
+    //Authenticated USER
     public Comment createComment(Long topicId, Long articleId, Comment commentObject){
-        Optional<Topic> topic = topicRepository.findById(topicId);
-        Optional<Article> article = articleRepository.findById(articleId);
-        if (topic.isPresent() && article.isPresent()){
-            commentObject.setArticle(article.get());
-            commentObject.setUser(utility.getAuthenticatedUser());
-            return commentRepository.save(commentObject);
-        } else {
-            throw new InformationNotFoundException("Cannot find topic or article");
-        }
+        User currentUser = utility.getAuthenticatedUser();
+        utility.errorIfRepositoryElementNotExistById(topicRepository,topicId, "Topic");
+        utility.errorIfRepositoryElementNotExistById(articleRepository,articleId,"Article");
+        if (articleRepository.findById(articleId).get().getTopic().getId() != topicId)
+            throw new InformationNotFoundException("Article with ID " + articleId + " is in a different topic");
+        commentObject.setArticle(articleRepository.findById(articleId).get());
+        commentObject.setUser(currentUser);
+        commentObject.setDateCreated(new Date(System.currentTimeMillis()));
+        return commentRepository.save(commentObject);
     }
 
+    //Authenticated USER, only his comment
     public Comment updateComment(Long topicId, Long articleId, Long commentId, Comment commentObject){
-        Optional<Topic> topic = topicRepository.findById(topicId);
-        Optional<Article> article = articleRepository.findById(articleId);
-        Comment comment = commentRepository.findById(commentId).get();
-
-        if (topic.isPresent() && article.isPresent()){
-            if (commentRepository.findById(commentId).isPresent()){
-                comment.setTextContent(commentObject.getTextContent());
-                return commentRepository.save(comment);
-            } else {
-                throw new InformationNotFoundException("Cannot find topic or article");
-            }
-        } else {
-            throw new InformationNotFoundException("Cannot find topic or article");
-        }
+        User currentUser = utility.getAuthenticatedUser();
+        utility.errorIfRepositoryElementNotExistById(topicRepository,topicId, "Topic");
+        utility.errorIfRepositoryElementNotExistById(articleRepository,articleId,"Article");
+        utility.errorIfRepositoryElementNotExistById(commentRepository,commentId,"Comment");
+        if (articleRepository.findById(articleId).get().getTopic().getId() != topicId)
+            throw new InformationNotFoundException("Article with ID " + articleId + " is in a different topic");
+        if (commentRepository.findById(commentId).get().getArticle().getId() != articleId)
+            throw new InformationNotFoundException("Comment with ID " + commentId + " is in a different article");
+        Comment currentComment = commentRepository.findById(commentId).get();
+        if (currentComment.getUser().getId() != currentUser.getId())
+            throw new InformationNotFoundException("Comment with ID " + commentId + " belongs to a different user");
+        currentComment.setTextContent(commentObject.getTextContent());
+        return commentRepository.save(currentComment);
     }
 
+    //Authenticated USER, only his comment; ADMIN; User who owns article
     public void deleteComment(Long topicId, Long articleId, Long commentId){
-        User user = utility.getAuthenticatedUser();
-        Optional<Comment> comment = commentRepository.findById(commentId);
-        Optional<Topic> topic = topicRepository.findById(topicId);
-        Optional<Article> article = articleRepository.findById(articleId);
-
-        if (comment.isPresent() && topic.isPresent() && article.isPresent()){
-            if(utility.isUserAdmin(user) || comment.get().getUser() == user){
-                commentRepository.deleteById(commentId);
-            } else {
-                throw new InformationForbidden("You must be the original poster or an admin to delete this comment!");
-            }
-        } else {
-            throw new InformationNotFoundException("Comment with id " + commentId + " not found!");
-        }
-
+        User currentUser = utility.getAuthenticatedUser();
+        utility.errorIfRepositoryElementNotExistById(topicRepository,topicId, "Topic");
+        utility.errorIfRepositoryElementNotExistById(articleRepository,articleId,"Article");
+        utility.errorIfRepositoryElementNotExistById(commentRepository,commentId,"Comment");
+        if (articleRepository.findById(articleId).get().getTopic().getId() != topicId)
+            throw new InformationNotFoundException("Article with ID " + articleId + " is in a different topic");
+        if (commentRepository.findById(commentId).get().getArticle().getId() != articleId)
+            throw new InformationNotFoundException("Comment with ID " + commentId + " is in a different article");
+        Comment currentComment = commentRepository.findById(commentId).get();
+        if ((currentComment.getUser().getId() == currentUser.getId())|| utility.isUserAdmin(currentUser)
+            || (currentUser.getId() == currentComment.getArticle().getUser().getId()))
+            commentRepository.deleteById(commentId);
+        else
+            throw new InformationForbidden("You must be the original poster or an admin to delete this comment!");
     }
 
+    public List<Comment> getChildComments(Long topicId, Long articleId, Long commentId){
+        return this.getArticleComment(topicId,articleId,commentId).getChildrenComments();
+    }
+
+    public Comment createChildComment(Long topicId, Long articleId,
+                                      Long commentId, Comment commentObject) {
+        Comment parent = this.getArticleComment(topicId,articleId,commentId);
+        commentObject.setParentComment(parent);
+        Comment currentNewComment = this.createComment(topicId,articleId,commentObject);
+        return commentRepository.save(parent);
+    }
 }

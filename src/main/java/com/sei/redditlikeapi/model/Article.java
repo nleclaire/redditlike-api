@@ -6,6 +6,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name="articles")
@@ -92,7 +93,7 @@ public class Article {
     }
 
     public List<Comment> getCommentList() {
-        return commentList;
+        return commentList.stream().filter(comment -> comment.getParentComment()==null).collect(Collectors.toList());
     }
 
 

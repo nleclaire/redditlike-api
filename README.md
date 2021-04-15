@@ -15,9 +15,14 @@ A RESTful API written in Java made for sharing articles.
 | DELETE | /api/topics/{topicId} | Delete a single topic w/ id |
 | GET | /api/topics/{topicId}/articles | Get all articles for single topic w/ id |
 | POST | /api/topics/{topicId}/articles | Create a new article in the given topic |
-| GET | /api/topics/{topicId}/articles/<span style="color:orange">{articleId}</span> | List single article in specified topic by Id |
-| PUT | /api/topics/{topicId}/articles/<span style="color:orange">{articleId}</span> | Update single article in specified topic by Id |
-| DELETE | /api/topics/{topicId}/articles/<span style="color:orange">{articleId}</span> | Delete single article in specified topic by Id |
+| GET | /api/topics/{topicId}/articles/{articleId} | List single article in specified topic by Id |
+| PUT | /api/topics/{topicId}/articles/{articleId} | Update single article in specified topic by Id |
+| DELETE | /api/topics/{topicId}/articles/{articleId} | Delete single article in specified topic by Id |
+| GET | /api/topics/{topicId}/articles/{articleId}/comments | List all comments under a single article |
+| POST | /api/topics/{topicId}/articles/{articleId}/comments | Create new comment under given article |
+| GET | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Get a single comment under a single article |
+| PUT | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Update comment under given article |
+| DELETE | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Delete comment under given article |
 | POST | /auth/users/register | Registers a new user |
 | POST | /auth/users/login | Logs a user in |
 
@@ -122,8 +127,8 @@ Finally, we're ready to talk about Lunch. Hit Send.
 ```json
 {
     "id": 4,
-    "name": "Breakfast",
-    "description": "mmm cereal",
+    "name": "Lunch",
+    "description": "My favorite meal of the day!",
     "articleList": null
 }
 ```
@@ -133,3 +138,116 @@ If you've made it up to this point, you should be able to navigate the rest of t
 
 Happy chatting!
 
+
+---
+
+## Required HTTP Request Body Format
+
+### GET /api/topics
+
+- No body required
+
+### POST /api/topics
+```json
+{
+  "title" : "Lunch",
+  "description" : "A place to talk about lunch"
+}
+```
+Note that an id will automatically be generated for you when you
+send a POST request
+
+### GET /api/topics/{topicId}
+
+- need to pass specified topic Id in the URL
+
+### PUT /api/topics/{topicId}
+```json
+{
+  "title" : "Updated title",
+  "description" : "Updated description"
+}
+```
+
+### DELETE /api/topics/{topicId}
+
+- Not necessary to pass a body, just an Id in the URL
+
+### GET /api/topics/{topicId}/articles
+
+- Not necessary to pass a body
+
+### POST /api/topics/{topicId}/articles/{articleId}
+
+```json
+{
+  "title" : "some title",
+  "textContent" : "some text"
+}
+```
+Note that it will automatically generate an Id for you
+
+### GET /api/topics/{topicId}/articles/{articleId}
+
+- Not necessary to have a body
+
+### PUT /api/topics/{topicId}/articles/{articleId}
+
+```json
+{
+  "title" : "updated title",
+  "textContent" : "updated text"
+}
+```
+
+### DELETE /api/topics/{topicId}/articles/{articleId}
+
+- Delete the specified article
+
+### GET /api/topics/{topicID}/articles/{articleId}/comments
+
+- No body necessary
+
+### POST /api/topics/{topicID}/articles/{articleId}/comments
+
+```json
+{
+  "textContent" : "some text"
+}
+```
+
+### GET /api/topics/{topicID}/articles/{articleId}/comments/{commentId}
+
+- No body necessary
+
+### PUT /api/topics/{topicID}/articles/{articleId}/comments/{commentId}
+
+```json
+{
+  "textContent" : "updated text"
+}
+```
+
+### DELETE /api/topics/{topicID}/articles/{articleId}/comments/{commentId}
+
+- No body necessary
+
+### POST /auth/users/register
+
+```json
+{
+	"userName" : "YOUR_USERNAME",
+	"emailAddress" : "YOUR_EMAIL@email.com",
+	"password" : "12345"
+}
+```
+
+### POST /auth/users/login
+
+```json
+{
+	"userName" : "YOUR_USERNAME",
+	"emailAddress" : "YOUR_EMAIL@email.com",
+	"password" : "12345"
+}
+```

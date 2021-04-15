@@ -2,7 +2,6 @@ package com.sei.redditlikeapi.controller;
 
 import com.sei.redditlikeapi.model.Comment;
 import com.sei.redditlikeapi.service.CommentService;
-import com.sei.redditlikeapi.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +12,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/topics/{topicId}/articles/{articleId}")
-public class CommentsController {
+public class CommentController {
     @Autowired
     private CommentService commentService;
 
     @GetMapping("/comments")
-    public List<Comment> getComments(@PathVariable Long topicId, @PathVariable Long articleId){
-        return commentService.getComments();
+    public List<Comment> getArticleComments(@PathVariable Long topicId, @PathVariable Long articleId){
+        return commentService.getArticleComments(topicId,articleId);
+    }
+
+    @GetMapping("/comments/{commentId}")
+    public Comment getArticleComment(@PathVariable Long topicId, @PathVariable Long articleId, @PathVariable Long commentId){
+        return commentService.getArticleComment(topicId,articleId,commentId);
     }
 
     @PostMapping("/comments")
@@ -40,4 +44,14 @@ public class CommentsController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/comments/{commentId}/thread")
+    public List<Comment> getChildComments(@PathVariable Long topicId, @PathVariable Long articleId, @PathVariable Long commentId){
+        return commentService.getChildComments(topicId,articleId,commentId);
+    }
+
+    @PostMapping("/comments/{commentId}")
+    public Comment createChildComment(@PathVariable Long topicId, @PathVariable Long articleId,
+                                      @PathVariable Long commentId, @RequestBody Comment commentObject) {
+        return commentService.createChildComment(topicId,articleId,commentId,commentObject);
+    }
 }

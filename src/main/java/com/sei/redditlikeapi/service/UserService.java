@@ -4,7 +4,8 @@ import com.sei.redditlikeapi.exception.InformationExistException;
 import com.sei.redditlikeapi.exception.InformationForbidden;
 import com.sei.redditlikeapi.exception.InformationNotFoundException;
 import com.sei.redditlikeapi.model.User;
-import com.sei.redditlikeapi.model.UserAdminHint;
+import com.sei.redditlikeapi.utilities.PasswordChange;
+import com.sei.redditlikeapi.utilities.UserAdminHint;
 import com.sei.redditlikeapi.model.UserProfile;
 import com.sei.redditlikeapi.model.request.LoginRequest;
 import com.sei.redditlikeapi.model.response.LoginResponse;
@@ -19,6 +20,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -50,6 +54,7 @@ public class UserService {
                 throw new InformationExistException("User with Username '" + userObject.getUserName() +
                         "' already exists");
             userObject.setPassword(passwordEncoder.encode(userObject.getPassword()));
+            userObject.setPasswordChangedTime(new Date(System.currentTimeMillis()));
             if (userObject.getWhoShotFirst() == null)
                 return userRepository.save(userObject.toUser(false));
             else if (userObject.getWhoShotFirst().equals("Han"))
@@ -109,5 +114,38 @@ public class UserService {
         } else
             throw new InformationNotFoundException("User profile doesn't exist for User with ID " +
                     currentUser.getId());
+    }
+
+    public UserProfile getProfile(){
+        User currentUser = utility.getAuthenticatedUser();
+        if (currentUser.getUserProfile() != null)
+            return profileRepository.findByUserId(currentUser.getId());
+         else
+            throw new InformationNotFoundException("User profile doesn't exist for User with ID " +
+                    currentUser.getId());
+    }
+
+    public List<UserProfile> getAllUserProfiles(){
+        if (profileRepository.findAll().isEmpty())
+            throw new InformationNotFoundException("No profiles set up yet!");
+        return profileRepository.findAll();
+    }
+
+    public User changePassword(PasswordChange passInfo) {
+        User currentUser = utility.getAuthenticatedUser();
+        if (passInfo.isNotNull())
+            if (passwordEncoder.matches(passInfo.getOldPassword(), currentUser.getPassword())) {
+                currentUser.setPassword(passwordEncoder.encode(passInfo.getNewPassword()));
+                currentUser.setPasswordChangedTime(new Date(System.currentTimeMillis()));
+                return userRepository.save(currentUser);
+            }
+            else
+                throw new InformationForbidden("Passwords do not match!");
+        else
+            throw new InformationNotFoundException("Wrong input provided");
+    }
+
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
     }
 }
