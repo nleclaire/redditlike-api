@@ -13,6 +13,7 @@ import com.sei.redditlikeapi.repository.ProfileRepository;
 import com.sei.redditlikeapi.repository.UserRepository;
 import com.sei.redditlikeapi.security.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -125,19 +127,28 @@ public class UserService {
                     currentUser.getId());
     }
 
+    public void deleteProfile(){
+        User currentUser = utility.getAuthenticatedUser();
+        if (currentUser.getUserProfile() != null)
+            profileRepository.deleteById(currentUser.getUserProfile().getId());
+        else
+            throw new InformationNotFoundException("User profile doesn't exist for User with ID " +
+                    currentUser.getId());
+    }
+
     public List<UserProfile> getAllUserProfiles(){
         if (profileRepository.findAll().isEmpty())
             throw new InformationNotFoundException("No profiles set up yet!");
         return profileRepository.findAll();
     }
 
-    public User changePassword(PasswordChange passInfo) {
+    public void changePassword(PasswordChange passInfo) {
         User currentUser = utility.getAuthenticatedUser();
         if (passInfo.isNotNull())
             if (passwordEncoder.matches(passInfo.getOldPassword(), currentUser.getPassword())) {
                 currentUser.setPassword(passwordEncoder.encode(passInfo.getNewPassword()));
                 currentUser.setPasswordChangedTime(new Date(System.currentTimeMillis()));
-                return userRepository.save(currentUser);
+                userRepository.save(currentUser);
             }
             else
                 throw new InformationForbidden("Passwords do not match!");
