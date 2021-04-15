@@ -33,8 +33,7 @@ public class Topic {
     public Topic() {
     }
 
-    public Topic(Long id, String name, String description) {
-        this.id = id;
+    public Topic(String name, String description) {
         this.name = name;
         this.description = description;
     }
