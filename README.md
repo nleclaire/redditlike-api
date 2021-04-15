@@ -19,12 +19,22 @@ A RESTful API written in Java made for sharing articles.
 | PUT | /api/topics/{topicId}/articles/{articleId} | Update single article in specified topic by Id |
 | DELETE | /api/topics/{topicId}/articles/{articleId} | Delete single article in specified topic by Id |
 | GET | /api/topics/{topicId}/articles/{articleId}/comments | List all comments under a single article |
+| GET | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Get single comment under another comment |
 | POST | /api/topics/{topicId}/articles/{articleId}/comments | Create new comment under given article |
 | GET | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Get a single comment under a single article |
+| GET | /api/topics/{topicId}/articles/{articleId}/comments/{commentId}/thread | List all comments under another comment |
+| POST | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Create new comment under another comment |
 | PUT | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Update comment under given article |
 | DELETE | /api/topics/{topicId}/articles/{articleId}/comments/{commentId} | Delete comment under given article |
 | POST | /auth/users/register | Registers a new user |
 | POST | /auth/users/login | Logs a user in |
+| GET | /auth/users/profile | Get user's profile |
+| GET | /auth/users/profile/all | Get all profiles |
+| POST | /auth/users/profile | Create a new profile |
+| PUT | /auth/users/profile/update | Update a profile |
+| DELETE | /auth/users/delete/{userId} | Deletes a specified user by Id |
+| GET | /auth/users | Get a list of users |
+| PUT | /auth/users/login/changepassword | Change a user's password |
 
 ---
 
