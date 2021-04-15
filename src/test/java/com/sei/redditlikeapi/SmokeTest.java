@@ -1,7 +1,7 @@
 package com.sei.redditlikeapi;
 
 import com.sei.redditlikeapi.controller.ArticleController;
-import com.sei.redditlikeapi.controller.CommentsController;
+import com.sei.redditlikeapi.controller.CommentController;
 import com.sei.redditlikeapi.controller.TopicController;
 import com.sei.redditlikeapi.controller.UserController;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ public class SmokeTest {
     private ArticleController articleController;
 
     @Autowired
-    private CommentsController commentsController;
+    private CommentController commentController;
 
     @Autowired
     private UserController userController;
@@ -29,7 +29,7 @@ public class SmokeTest {
     public void contextLoads() {
         assertThat(topicController).isNotNull();
         assertThat(articleController).isNotNull();
-        assertThat(commentsController).isNotNull();
+        assertThat(commentController).isNotNull();
         assertThat(userController).isNotNull();
     }
 
