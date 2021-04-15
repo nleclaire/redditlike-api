@@ -1,4 +1,4 @@
-package com.sei.redditlikeapi;
+package com.sei.redditlikeapi.controller;
 
 import com.sei.redditlikeapi.model.Article;
 import com.sei.redditlikeapi.model.Topic;
