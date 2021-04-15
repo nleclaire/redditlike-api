@@ -11,6 +11,7 @@ import java.util.List;
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     boolean existsByTitle(String title);
     Article findByIdAndTitle(Long articleId, String title);
+    Article findByTitle(String title);
     List<Article> findByTopicId(Long topicId);
     Article findByTopicIdAndId(Long topicId, Long articleId);
     Article findByIdAndUserId(Long id, Long userId);
