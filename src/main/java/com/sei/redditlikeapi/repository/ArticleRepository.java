@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
+    boolean existsByTitle(String title);
     Article findByIdAndTitle(Long articleId, String title);
     List<Article> findByTopicId(Long topicId);
     Article findByTopicIdAndId(Long topicId, Long articleId);

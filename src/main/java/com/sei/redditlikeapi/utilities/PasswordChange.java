@@ -1,6 +1,7 @@
 package com.sei.redditlikeapi.utilities;
 
 public class PasswordChange {
+    private String emailAddress;
     private String oldPassword;
     private String newPassword;
 
@@ -17,5 +18,9 @@ public class PasswordChange {
 
     public boolean isNotNull(){
         return this.oldPassword!=null && this.newPassword!=null ? true: false;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
     }
 }

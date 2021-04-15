@@ -57,14 +57,25 @@ public class UserController {
         return userService.getProfile();
     }
 
-    @GetMapping("users/profile/all")
+    @DeleteMapping("/users/profile")
+    public ResponseEntity<?> deleteProfile(){
+        userService.deleteProfile();
+        HashMap responseMessage = new HashMap();
+        responseMessage.put("Status", "User profile was successfully deleted");
+        return new ResponseEntity<HashMap>(responseMessage, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/profile/all")
     public List<UserProfile> getAllUserProfiles(){
         return userService.getAllUserProfiles();
     }
 
     @PutMapping("/users/login/changepassword")
-    public User changePassword(@RequestBody PasswordChange newPassword) {
-        return userService.changePassword(newPassword);
+    public ResponseEntity<?> changePassword(@RequestBody PasswordChange newPassword) {
+        userService.changePassword(newPassword);
+        HashMap responseMessage = new HashMap();
+        responseMessage.put("Status", "Password was successfully changed");
+        return new ResponseEntity<HashMap>(responseMessage, HttpStatus.OK);
     }
 
     @GetMapping("/users")

@@ -4,6 +4,10 @@
 
 A RESTful API written in Java made for sharing articles.
 
+## ER Diagram
+
+![ER Diagram](/redditlike-api-ERD.png)
+
 ### Supported HTTP requests and their path mappings
 
 | HTTP REQUEST | PATH | FUNCTIONALITY |
@@ -318,6 +322,7 @@ Note that it will automatically generate an Id for you
 
 ```json
 {
+	"emailAddress" : "YOUR EMAIL@email.com",
 	"oldPassword" : "12345",
 	"newPassword" : "123456"
 }

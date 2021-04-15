@@ -13,6 +13,7 @@ import com.sei.redditlikeapi.repository.ProfileRepository;
 import com.sei.redditlikeapi.repository.UserRepository;
 import com.sei.redditlikeapi.security.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -116,36 +118,47 @@ public class UserService {
                     currentUser.getId());
     }
 
-    public UserProfile getProfile(){
+    public UserProfile getProfile() {
         User currentUser = utility.getAuthenticatedUser();
         if (currentUser.getUserProfile() != null)
             return profileRepository.findByUserId(currentUser.getId());
-         else
+        else
             throw new InformationNotFoundException("User profile doesn't exist for User with ID " +
                     currentUser.getId());
     }
 
-    public List<UserProfile> getAllUserProfiles(){
+    public void deleteProfile() {
+        User currentUser = utility.getAuthenticatedUser();
+        if (currentUser.getUserProfile() != null)
+            profileRepository.deleteById(currentUser.getUserProfile().getId());
+        else
+            throw new InformationNotFoundException("User profile doesn't exist for User with ID " +
+                    currentUser.getId());
+    }
+
+    public List<UserProfile> getAllUserProfiles() {
         if (profileRepository.findAll().isEmpty())
             throw new InformationNotFoundException("No profiles set up yet!");
         return profileRepository.findAll();
     }
 
-    public User changePassword(PasswordChange passInfo) {
-        User currentUser = utility.getAuthenticatedUser();
-        if (passInfo.isNotNull())
-            if (passwordEncoder.matches(passInfo.getOldPassword(), currentUser.getPassword())) {
+    public void changePassword(PasswordChange passInfo) {
+        if (passInfo.isNotNull()) {
+            User currentUser = userRepository.findByEmailAddress(passInfo.getEmailAddress());
+            if (currentUser == null)
+                throw new InformationNotFoundException("User with email address " + passInfo.getEmailAddress() +
+                        " doesn't exist");
+            else if (passwordEncoder.matches(passInfo.getOldPassword(), currentUser.getPassword())) {
                 currentUser.setPassword(passwordEncoder.encode(passInfo.getNewPassword()));
                 currentUser.setPasswordChangedTime(new Date(System.currentTimeMillis()));
-                return userRepository.save(currentUser);
-            }
-            else
+                userRepository.save(currentUser);
+            } else
                 throw new InformationForbidden("Passwords do not match!");
-        else
+        } else
             throw new InformationNotFoundException("Wrong input provided");
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 }
