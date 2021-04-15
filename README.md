@@ -322,7 +322,7 @@ Note that it will automatically generate an Id for you
 
 ```json
 {
-	"emailAddress" : "YOUR EMAIL@email.com"
+	"emailAddress" : "YOUR EMAIL@email.com",
 	"oldPassword" : "12345",
 	"newPassword" : "123456"
 }
