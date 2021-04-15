@@ -26,10 +26,14 @@ class TopicRepositoryTest {
     private UserRepository userRepository;
 
     private Topic topic;
+    private User user;
 
+    //Should at least be one user in users table
     @BeforeEach
     public void setUp() {
         topic = new Topic("Name","Description");
+        user = userRepository.findAll().get(0);
+        topic.setUser(user);
     }
 
     @AfterEach
@@ -49,35 +53,29 @@ class TopicRepositoryTest {
 
 
     @Test
-    void findByName() {
+    public void givenNameShouldReturnTopicWithThatName() {
         String name = topic.getName();
         topicRepository.save(topic);
         assertEquals(name,topicRepository.findByName(name).getName());
 
     }
 
-    @Test //Should at least be one user in users table
-    void findByUserId() {
-        User myUser = userRepository.findAll().get(0);
-        topic.setUser(myUser);
+    @Test
+    public void givenUserIdShouldReturnTopicWithThatId() {
         topicRepository.save(topic);
-        assertEquals(topic.getId(), topicRepository.findByUserId(myUser.getId()).get(0).getId());
+        assertEquals(topic.getId(), topicRepository.findByUserId(user.getId()).get(0).getId());
     }
 
     @Test
-    void findByUserIdAndName() {
+    public void givenUserIdAndNameShouldReturnAppropriateTopic() {
         String name = topic.getName();
-        User myUser = userRepository.findAll().get(0);
-        topic.setUser(myUser);
         topicRepository.save(topic);
-        assertEquals(topic.getId(), topicRepository.findByUserIdAndName(myUser.getId(),name).getId());
+        assertEquals(topic.getId(), topicRepository.findByUserIdAndName(user.getId(),name).getId());
     }
 
     @Test
-    void findByIdAndUserId() {
-        User myUser = userRepository.findAll().get(0);
-        topic.setUser(myUser);
+    public void givenTopicIdAndUserIdShouldReturnAppropriateTopic() {
         topicRepository.save(topic);
-        assertEquals(topic.getId(), topicRepository.findByIdAndUserId(topic.getId(), myUser.getId()).getId());
+        assertEquals(topic.getId(), topicRepository.findByIdAndUserId(topic.getId(), user.getId()).getId());
     }
 }

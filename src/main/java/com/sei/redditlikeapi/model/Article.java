@@ -39,6 +39,11 @@ public class Article {
     public Article() {
     }
 
+    public Article(String title, String textContent) {
+        this.title = title;
+        this.textContent = textContent;
+    }
+
     public Article(Long id, String title, String textContent) {
         this.id = id;
         this.title = title;
