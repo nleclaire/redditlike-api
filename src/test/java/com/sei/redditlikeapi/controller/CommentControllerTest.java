@@ -1,4 +1,4 @@
-package com.sei.redditlikeapi;
+package com.sei.redditlikeapi.controller;
 
 import com.sei.redditlikeapi.model.Article;
 import com.sei.redditlikeapi.model.Comment;
@@ -123,8 +123,8 @@ public class CommentControllerTest {
         assertThat(response.getBody()).hasFieldOrPropertyWithValue("textContent", "Update description");
     }
 
-//    // Get Test comment by textContent, DELETE it
-//    // Verify that the response contains field "Response" as specified in controller
+    //    // Get Test comment by textContent, DELETE it
+    //    // Verify that the response contains field "Response" as specified in controller
     @Test
     public void deleteCommentShouldReturnAResponseEntityWithFieldResponse(){
         Long topicId = topicRepository.findByName("Test").getId();
@@ -142,3 +142,5 @@ public class CommentControllerTest {
         topicRepository.deleteById(topicId);
     }
 }
+
+
