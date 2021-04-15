@@ -4,6 +4,10 @@
 
 A RESTful API written in Java made for sharing articles.
 
+## ER Diagram
+
+![ER Diagram](/redditlike-api%20ERD.png)
+
 ### Supported HTTP requests and their path mappings
 
 | HTTP REQUEST | PATH | FUNCTIONALITY |
