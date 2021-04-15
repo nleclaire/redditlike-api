@@ -27,16 +27,15 @@ public class ArticleService {
     public Article createArticle(Long topicId, Article articleObject) {
         User currentUser = utility.getAuthenticatedUser();
         Optional<Topic> topic = topicRepository.findById(topicId);
-        if (topic.isPresent()) {
-            if (articleRepository.findByIdAndTitle(articleObject.getId(), articleObject.getTitle()) != null)
-                throw new InformationExistException("Article with id " + articleObject.getId() + " already exists!");
-            else {
+        if (topic.isPresent())
+                if (articleRepository.existsByTitle(articleObject.getTitle()))
+                    throw new InformationExistException("Article with title " + articleObject.getTitle() + " already exists!");
+                else{
                 articleObject.setTopic(topic.get());
                 articleObject.setUser(currentUser);
                 return articleRepository.save(articleObject);
             }
-        } else
-            throw new InformationNotFoundException("Topic with ID " + topicId + " doesn't exist");
+        else throw new InformationNotFoundException("Topic with ID " + topicId + " doesn't exist");
     }
 
     public List<Article> getArticles(Long topicId) {
