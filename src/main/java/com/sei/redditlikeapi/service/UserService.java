@@ -118,16 +118,16 @@ public class UserService {
                     currentUser.getId());
     }
 
-    public UserProfile getProfile(){
+    public UserProfile getProfile() {
         User currentUser = utility.getAuthenticatedUser();
         if (currentUser.getUserProfile() != null)
             return profileRepository.findByUserId(currentUser.getId());
-         else
+        else
             throw new InformationNotFoundException("User profile doesn't exist for User with ID " +
                     currentUser.getId());
     }
 
-    public void deleteProfile(){
+    public void deleteProfile() {
         User currentUser = utility.getAuthenticatedUser();
         if (currentUser.getUserProfile() != null)
             profileRepository.deleteById(currentUser.getUserProfile().getId());
@@ -136,27 +136,29 @@ public class UserService {
                     currentUser.getId());
     }
 
-    public List<UserProfile> getAllUserProfiles(){
+    public List<UserProfile> getAllUserProfiles() {
         if (profileRepository.findAll().isEmpty())
             throw new InformationNotFoundException("No profiles set up yet!");
         return profileRepository.findAll();
     }
 
     public void changePassword(PasswordChange passInfo) {
-        User currentUser = utility.getAuthenticatedUser();
-        if (passInfo.isNotNull())
-            if (passwordEncoder.matches(passInfo.getOldPassword(), currentUser.getPassword())) {
+        if (passInfo.isNotNull()) {
+            User currentUser = userRepository.findByEmailAddress(passInfo.getEmailAddress());
+            if (currentUser == null)
+                throw new InformationNotFoundException("User with email address " + passInfo.getEmailAddress() +
+                        " doesn't exist");
+            else if (passwordEncoder.matches(passInfo.getOldPassword(), currentUser.getPassword())) {
                 currentUser.setPassword(passwordEncoder.encode(passInfo.getNewPassword()));
                 currentUser.setPasswordChangedTime(new Date(System.currentTimeMillis()));
                 userRepository.save(currentUser);
-            }
-            else
+            } else
                 throw new InformationForbidden("Passwords do not match!");
-        else
+        } else
             throw new InformationNotFoundException("Wrong input provided");
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 }
