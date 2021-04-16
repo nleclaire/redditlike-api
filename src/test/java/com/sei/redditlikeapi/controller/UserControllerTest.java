@@ -23,6 +23,7 @@ import java.net.http.HttpResponse;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest {
     private User user;
+    private ControllerTestUtility utility = new ControllerTestUtility();
 
     @LocalServerPort
     private int port;

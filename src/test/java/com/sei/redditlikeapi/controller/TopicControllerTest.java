@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.*;
 public class TopicControllerTest {
 
     private Topic topic;
+    private ControllerTestUtility utility = new ControllerTestUtility();
 
     @LocalServerPort
     private int port;
@@ -35,27 +36,6 @@ public class TopicControllerTest {
     @Autowired
     private TopicRepository topicRepository;
 
-    // Create HttpEntity saved my life
-    // https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/HttpEntity.html
-    // Lets us spoof an HTTP request with Authorization and Content-Type headers
-    private HttpEntity createHttpEntityWithBody(Object object){
-        // set headers "Content-Type" : "application/json" and "Authorization" : "Bearer JWT_TOKEN"
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWt0b3Iub2xlc25ldnljaEBob3RtYWlsLmNvbSIsImV4cCI6MTYxODYxMzIzNCwiaWF0IjoxNjE4NTc3MjM0fQ._Dmu8aP4ahDlA-NBG-ddPKSAWVe1m6S4GZA4BQHPajw");
-
-        // return an HttpEntity with body of topic and headers
-        return new HttpEntity<>(object, headers);
-    }
-
-    // Another HttpEntity, to create generic request
-    private HttpEntity createHttpRequest(){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWt0b3Iub2xlc25ldnljaEBob3RtYWlsLmNvbSIsImV4cCI6MTYxODYxMzIzNCwiaWF0IjoxNjE4NTc3MjM0fQ._Dmu8aP4ahDlA-NBG-ddPKSAWVe1m6S4GZA4BQHPajw");
-
-        return new HttpEntity<>(headers);
-    }
-
     // Create new topic, and and POST it
     // Check to make sure that status code is 200, and response fields match that of the Test topic
     @Test
@@ -64,7 +44,7 @@ public class TopicControllerTest {
         topic = new Topic("Test", "Test description");
 
         // make new HttpEntity with topic as request body
-        HttpEntity<?> request = createHttpEntityWithBody(topic);
+        HttpEntity<?> request = utility.createHttpEntityWithBody(topic);
         ResponseEntity<?> response = restTemplate.exchange(resourceURL, HttpMethod.POST, request, Topic.class);
 
        // System.out.println("ID HERE " + topic.getId());
@@ -80,7 +60,7 @@ public class TopicControllerTest {
 
         Long id = topicRepository.findByName("Test").getId();
         String resourceURL = "http://localhost:" + port + "/api/topics/" + id;
-        HttpEntity<?> request = createHttpRequest();
+        HttpEntity<?> request = utility.createHttpRequest();
         ResponseEntity<?> response = restTemplate.exchange(resourceURL, HttpMethod.GET, request, Topic.class);
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
         assertThat(response.getBody()).hasFieldOrPropertyWithValue("name", "Test");
@@ -95,7 +75,7 @@ public class TopicControllerTest {
         Long id = topicRepository.findByName("Test").getId();
         String resourceURL = "http://localhost:" + port + "/api/topics/" + id;
         topic = new Topic("Test", "Update Description");
-        HttpEntity<?> request = createHttpEntityWithBody(topic);
+        HttpEntity<?> request = utility.createHttpEntityWithBody(topic);
         ResponseEntity<?> response = restTemplate.exchange(resourceURL, HttpMethod.PUT, request, Topic.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
@@ -110,7 +90,7 @@ public class TopicControllerTest {
         Long id = topicRepository.findByName("Test").getId();
         String resourceURL = "http://localhost:" + port + "/api/topics/" + id;
 
-        HttpEntity<?> request = createHttpRequest();
+        HttpEntity<?> request = utility.createHttpRequest();
         ResponseEntity<?> response = restTemplate.exchange(resourceURL, HttpMethod.DELETE, request, Object.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);

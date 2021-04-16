@@ -30,6 +30,7 @@ public class CommentControllerTest {
     private Comment comment;
     private Topic topic;
     private Article article;
+    private ControllerTestUtility utility = new ControllerTestUtility();
 
     @LocalServerPort
     private int port;
@@ -47,29 +48,6 @@ public class CommentControllerTest {
     @Autowired
     private CommentRepository commentRepository;
 
-
-    // Create HttpEntity saved my life
-    // https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/HttpEntity.html
-    // Lets us spoof an HTTP request with Authorization and Content-Type headers
-    private HttpEntity createHttpEntityWithComment(Comment comment){
-        // set headers "Content-Type" : "application/json" and "Authorization" : "Bearer JWT_TOKEN"
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWt0b3Iub2xlc25ldnljaEBob3RtYWlsLmNvbSIsImV4cCI6MTYxODYxMzIzNCwiaWF0IjoxNjE4NTc3MjM0fQ._Dmu8aP4ahDlA-NBG-ddPKSAWVe1m6S4GZA4BQHPajw");
-
-        // return an HttpEntity with body of topic and headers
-        return new HttpEntity<>(comment, headers);
-    }
-
-    // Another HttpEntity, to create generic request
-    private HttpEntity createHttpRequest(){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWt0b3Iub2xlc25ldnljaEBob3RtYWlsLmNvbSIsImV4cCI6MTYxODYxMzIzNCwiaWF0IjoxNjE4NTc3MjM0fQ._Dmu8aP4ahDlA-NBG-ddPKSAWVe1m6S4GZA4BQHPajw");
-
-        return new HttpEntity<>(headers);
-    }
-
     // Create new Comment, and and POST it
     // Check to make sure that status code is 200, and response fields match that of the Test topic
     @Test
@@ -82,7 +60,7 @@ public class CommentControllerTest {
         String resourceURL = "http://localhost:" + port + "/api/topics/" + topic.getId() + "/articles/" + article.getId() +
                 "/comments";
         comment = new Comment("Text description");
-        HttpEntity<?> request = createHttpEntityWithComment(comment);
+        HttpEntity<?> request = utility.createHttpEntityWithBody(comment);
         ResponseEntity<?> response = restTemplate.exchange(resourceURL, HttpMethod.POST, request, Comment.class);
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
         assertThat(response.getBody()).hasFieldOrPropertyWithValue("textContent", "Text description");
@@ -98,7 +76,7 @@ public class CommentControllerTest {
 
         String resourceURL = "http://localhost:" + port + "/api/topics/" + topicId + "/articles/" + articleId +
                 "/comments/" + id;
-        HttpEntity<?> request = createHttpRequest();
+        HttpEntity<?> request = utility.createHttpRequest();
         ResponseEntity<?> response = restTemplate.exchange(resourceURL, HttpMethod.GET, request, Comment.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
@@ -116,7 +94,7 @@ public class CommentControllerTest {
         String resourceURL = "http://localhost:" + port + "/api/topics/" + topicId + "/articles/" + articleId +
                 "/comments/" + id;
         comment = new Comment("Update description");
-        HttpEntity<?> request = createHttpEntityWithComment(comment);
+        HttpEntity<?> request = utility.createHttpEntityWithBody(comment);
         ResponseEntity<?> response = restTemplate.exchange(resourceURL, HttpMethod.PUT, request, Comment.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
@@ -133,7 +111,7 @@ public class CommentControllerTest {
 
         String resourceURL = "http://localhost:" + port + "/api/topics/" + topicId + "/articles/" + articleId +
                 "/comments/" + id;
-        HttpEntity<?> request = createHttpRequest();
+        HttpEntity<?> request = utility.createHttpRequest();
         ResponseEntity<?> response = restTemplate.exchange(resourceURL, HttpMethod.DELETE, request, Object.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
