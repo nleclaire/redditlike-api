@@ -1,0 +1,18 @@
+package com.sei.redditlikeapi.repository;
+
+import com.sei.redditlikeapi.model.Article;
+import com.sei.redditlikeapi.model.Topic;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ArticleRepository extends JpaRepository<Article, Long> {
+    boolean existsByTitle(String title);
+    Article findByTitle(String title);
+    Article findByIdAndTitle(Long articleId, String title);
+    List<Article> findByTopicId(Long topicId);
+    Article findByTopicIdAndId(Long topicId, Long articleId);
+    Article findByIdAndUserId(Long id, Long userId);
+}
