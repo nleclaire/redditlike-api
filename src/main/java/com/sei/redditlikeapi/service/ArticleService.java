@@ -24,6 +24,9 @@ public class ArticleService {
     @Autowired
     private TopicRepository topicRepository;
 
+    // Get current user, try to find topic by Id.
+    // If topic is not present, throw an exception
+    // If article title exists already, throw exception. Otherwise set article's topic and user
     public Article createArticle(Long topicId, Article articleObject) {
         User currentUser = utility.getAuthenticatedUser();
         Optional<Topic> topic = topicRepository.findById(topicId);
@@ -38,6 +41,7 @@ public class ArticleService {
         } else throw new InformationNotFoundException("Topic with ID " + topicId + " doesn't exist");
     }
 
+    // Return a list of articles if topic exists and list is not null
     public List<Article> getArticles(Long topicId) {
         if (topicRepository.findById(topicId).isEmpty())
             throw new InformationNotFoundException("Topic with ID " + topicId + " doesn't exist");
@@ -48,6 +52,7 @@ public class ArticleService {
             throw new InformationNotFoundException("Topic with ID " + topicId + " doesn't have any articles!");
     }
 
+    // Return a single article if and only if topic and article Ids can be found
     public Article getArticle(Long topicId, Long articleId) {
         if (topicRepository.findById(topicId).isEmpty())
             throw new InformationNotFoundException("Topic with ID " + topicId + " doesn't exist");
@@ -58,13 +63,13 @@ public class ArticleService {
                     topicId + " not found!");
     }
 
-    // TODO: check whether current user is the user who created the article, or is an admin
+    // Verify topic exists, then get article by topicId and articleId
+    // Allow user to update article if they are the original user OR they are an admin
     public Article updateArticle(Long topicId, Long articleId, Article articleObject) {
         User currentUser = utility.getAuthenticatedUser();
         if (topicRepository.findById(topicId).isEmpty())
             throw new InformationNotFoundException("Topic with ID " + topicId + " doesn't exist");
-        List<Article> articles = this.getArticles(topicId);
-        Article updateArticle = articles.stream().filter(a -> a.getId().equals(articleId)).findFirst().get();
+        Article updateArticle = articleRepository.findByTopicIdAndId(topicId, articleId);
         if (updateArticle == null)
             throw new InformationNotFoundException("Article with ID " + articleId + " and topic ID " + topicId + " not found!");
         else {
@@ -79,6 +84,8 @@ public class ArticleService {
         }
     }
 
+    // Verify topic and article exist
+    // Delete article only if user is original poster OR user is admin
     public void deleteArticle(Long topicId, Long articleId) {
         User currentUser = utility.getAuthenticatedUser();
         if (topicRepository.findById(topicId).isEmpty())
