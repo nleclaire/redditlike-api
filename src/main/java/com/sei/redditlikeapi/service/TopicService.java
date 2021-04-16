@@ -55,7 +55,7 @@ public class TopicService {
     public Topic updateTopic(Long topicId, Topic topicObject) {
         User currentUser = utility.getAuthenticatedUser();
         if (topicRepository.findById(topicId).isPresent()) {
-            if (utility.checkIfUserTopicExists(topicRepository, currentUser.getId(), topicId)
+            if (utility.checkIfUserTopicExists(topicRepository, topicId, currentUser.getId())
                     || utility.isUserAdmin(currentUser)) {
                 Topic topic = topicRepository.findById(topicId).get();
                 topic.setName(topicObject.getName());
