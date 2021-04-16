@@ -43,6 +43,10 @@ public class Comment {
     public Comment() {
     }
 
+    public Comment(String textContent) {
+        this.textContent = textContent;
+    }
+
     public Comment(Long id, String title, String textContent) {
         this.id = id;
         this.textContent = textContent;

@@ -1,8 +1,10 @@
 package com.sei.redditlikeapi.controller;
 
 import com.sei.redditlikeapi.model.Article;
+import com.sei.redditlikeapi.model.Comment;
 import com.sei.redditlikeapi.model.Topic;
 import com.sei.redditlikeapi.repository.ArticleRepository;
+import com.sei.redditlikeapi.repository.CommentRepository;
 import com.sei.redditlikeapi.repository.TopicRepository;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -45,7 +47,7 @@ public class ArticleControllerTest {
     // Create HttpEntity saved my life
     // https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/HttpEntity.html
     // Lets us spoof an HTTP request with Authorization and Content-Type headers
-    private HttpEntity createHttpEntityWithBody(Object object){
+    private HttpEntity createHttpEntityWithBody(Object object) {
         // set headers "Content-Type" : "application/json" and "Authorization" : "Bearer JWT_TOKEN"
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -56,7 +58,7 @@ public class ArticleControllerTest {
     }
 
     // Another HttpEntity, to create generic request
-    private HttpEntity createHttpRequest(){
+    private HttpEntity createHttpRequest() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1bmNoLmxlY2xhaXJlQGVtYWlsLmNvbSIsImV4cCI6MTYxODU1NTA2MCwiaWF0IjoxNjE4NTE5MDYwfQ.p_1hvQxeE9UhmQVCRC-mmTBdEMTau8kUg-gUJnFypqI");
@@ -67,7 +69,7 @@ public class ArticleControllerTest {
     // Create new topic, and and POST it
     // Check to make sure that status code is 200, and response fields match that of the Test topic
     @Test
-    public void postTopicShouldReturnOKForASingleTopicAndIsOfClassTypeTopic(){
+    public void postTopicShouldReturnOKForASingleTopicAndIsOfClassTypeTopic() {
         String resourceURL = "http://localhost:" + port + "/api/topics/new";
         topic = new Topic("Test", "Test description");
 
@@ -81,7 +83,7 @@ public class ArticleControllerTest {
     }
 
     @Test
-    public void postArticleShouldReturnOKForASingleArticleAndIsOfClassTypeArticle(){
+    public void postArticleShouldReturnOKForASingleArticleAndIsOfClassTypeArticle() {
         Long id = topicRepository.findByName("Test").getId();
         String resourceURL = "http://localhost:" + port + "/api/topics/" + id + "/articles";
         article = new Article("Test Article", "Test Content");
@@ -98,7 +100,7 @@ public class ArticleControllerTest {
     // Find that same Test topic by name, and GET it
     // Check to make sure the Http status is 200 (OK) and that fields match the Test topic
     @Test
-    public void getArticleShouldReturnASingleArticle(){
+    public void getArticleShouldReturnASingleArticle() {
 
         Long topicId = topicRepository.findByName("Test").getId();
         Long articleId = articleRepository.findByTitle("Test Article").getId();
@@ -115,7 +117,7 @@ public class ArticleControllerTest {
     // Find Test topic by name, and PUT some new info there
     // Check to make sure info matches updated information
     @Test
-    public void putArticleShouldReturnASingleArticleWithUpdatedFields(){
+    public void putArticleShouldReturnASingleArticleWithUpdatedFields() {
         Long topicId = topicRepository.findByName("Test").getId();
         Long articleId = articleRepository.findByTitle("Test Article").getId();
 
@@ -132,7 +134,7 @@ public class ArticleControllerTest {
     // Get Test topic by name, DELETE it
     // Verify that the response contains field "Response" as specified in controller
     @Test
-    public void deleteArticleShouldReturnAResponseEntityWithFieldResponse(){
+    public void deleteArticleShouldReturnAResponseEntityWithFieldResponse() {
         Long topicId = topicRepository.findByName("Test").getId();
         Long articleId = articleRepository.findByTitle("Updated Title").getId();
 
