@@ -37,14 +37,14 @@ public class TopicControllerTest {
     // Create HttpEntity saved my life
     // https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/HttpEntity.html
     // Lets us spoof an HTTP request with Authorization and Content-Type headers
-    private HttpEntity createHttpEntityWithTopic(Topic topic){
+    private HttpEntity createHttpEntityWithBody(Object object){
         // set headers "Content-Type" : "application/json" and "Authorization" : "Bearer JWT_TOKEN"
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1bmNoLmxlY2xhaXJlQGVtYWlsLmNvbSIsImV4cCI6MTYxODU1NTA2MCwiaWF0IjoxNjE4NTE5MDYwfQ.p_1hvQxeE9UhmQVCRC-mmTBdEMTau8kUg-gUJnFypqI");
 
         // return an HttpEntity with body of topic and headers
-        return new HttpEntity<>(topic, headers);
+        return new HttpEntity<>(object, headers);
     }
 
     // Another HttpEntity, to create generic request
@@ -64,7 +64,7 @@ public class TopicControllerTest {
         topic = new Topic("Test", "Test description");
 
         // make new HttpEntity with topic as request body
-        HttpEntity<?> request = createHttpEntityWithTopic(topic);
+        HttpEntity<?> request = createHttpEntityWithBody(topic);
         ResponseEntity<?> response = restTemplate.exchange(resourceURL, HttpMethod.POST, request, Topic.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
@@ -95,7 +95,7 @@ public class TopicControllerTest {
         Long id = topicRepository.findByName("Test").getId();
         String resourceURL = "http://localhost:" + port + "/api/topics/" + id;
         topic = new Topic("Test", "Update Description");
-        HttpEntity<?> request = createHttpEntityWithTopic(topic);
+        HttpEntity<?> request = createHttpEntityWithBody(topic);
         ResponseEntity<?> response = restTemplate.exchange(resourceURL, HttpMethod.PUT, request, Topic.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
