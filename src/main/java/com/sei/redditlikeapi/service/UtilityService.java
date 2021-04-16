@@ -10,7 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 //Here different helpful methods will be stored which can be used all around the services
 public class UtilityService {
-    //Returns Authenticated through JWT Token User
+
+    // Returns AUTHENTICATED through JWT Token User
     public User getAuthenticatedUser() {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser"))
             throw new InformationForbidden("Forbidden");
@@ -20,25 +21,27 @@ public class UtilityService {
         return userDetails.getUser();
     }
 
+    // Checks if USER is ADMIN
     public boolean isUserAdmin(User user) {
         return user != null ? user.getIsAdmin() : false;
     }
 
-    //Will check if topic exists by name
+    // Will check if TOPIC exists by NAME
     public boolean checkIfTopicExists(TopicRepository repository, String name) {
         return repository.findByName(name) != null ? true : false;
     }
 
-    //Will check if topic exists related to User topics by name
+    // Will check if TOPIC exists related to USER TOPICS by NAME
     public boolean checkIfUserTopicExists(TopicRepository repository, Long userId, String name) {
         return repository.findByUserIdAndName(userId, name) != null ? true : false;
     }
 
-    //Will check if topic exists related to User topics by id
+    // Will check if TOPIC exists related to USER TOPICS by ID
     public boolean checkIfUserTopicExists(TopicRepository repository, Long topicId, Long userId) {
         return repository.findByIdAndUserId(topicId, userId) != null ? true : false;
     }
 
+    // Will throw an error if some data is set incorrectly
     public void errorIfRepositoryElementNotExistById(JpaRepository repository, Long id, String elementName) {
         if (repository.findById(id).isEmpty())
             throw new InformationNotFoundException(elementName + " with ID " + id + " doesn't exist!");

@@ -13,7 +13,6 @@ import com.sei.redditlikeapi.repository.ProfileRepository;
 import com.sei.redditlikeapi.repository.UserRepository;
 import com.sei.redditlikeapi.security.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -49,7 +47,8 @@ public class UserService {
 
     UtilityService utility = new UtilityService();
 
-    // ADMIN : "secretQuestion" : "some answer"
+    // CREATES NEW USER, PUBLIC ENDPOINT
+    // ADMIN trick: "whoShotFirst" : "Han"
     public User createUser(UserAdminHint userObject) {
         if (!userRepository.existsByEmailAddress(userObject.getEmailAddress())) {
             if ((userRepository.existsByUserName(userObject.getUserName())))
@@ -68,7 +67,8 @@ public class UserService {
                     "' already exists");
     }
 
-    // using to test if deletes user
+    // DELETES EXISTING USER
+    // ONLY ADMIN USER HAS ACCESS
     public void deleteUser(Long userId) {
         User currentUser = utility.getAuthenticatedUser();
         if (userRepository.findById(userId).isPresent())
@@ -80,10 +80,12 @@ public class UserService {
             throw new InformationNotFoundException("User with ID " + userId + " not found!");
     }
 
+    // UTILITY Method
     public User findUserByEmailAddress(String emailAddress) {
         return userRepository.findByEmailAddress(emailAddress);
     }
 
+    // LOGINS USER
     public ResponseEntity<?> loginUser(LoginRequest loginRequest) {
         try {
             authenticationManager.authenticate(
@@ -97,6 +99,7 @@ public class UserService {
         }
     }
 
+    // CREATES NEW USER PROFILE
     public User createProfile(UserProfile newProfile) {
         User currentUser = utility.getAuthenticatedUser();
         if (currentUser.getUserProfile() == null) {
@@ -107,6 +110,7 @@ public class UserService {
                     " already exists.");
     }
 
+    // UPDATES EXISTING USER PROFILE, throw's an error if profile exists already
     public UserProfile updateProfile(UserProfile newProfile) {
         User currentUser = utility.getAuthenticatedUser();
         if (currentUser.getUserProfile() != null) {
@@ -118,6 +122,7 @@ public class UserService {
                     currentUser.getId());
     }
 
+    // Get CURRENT USER'S PROFILE
     public UserProfile getProfile() {
         User currentUser = utility.getAuthenticatedUser();
         if (currentUser.getUserProfile() != null)
@@ -127,6 +132,7 @@ public class UserService {
                     currentUser.getId());
     }
 
+    // DELETES CURRENT USER PROFILE
     public void deleteProfile() {
         User currentUser = utility.getAuthenticatedUser();
         if (currentUser.getUserProfile() != null)
@@ -136,12 +142,14 @@ public class UserService {
                     currentUser.getId());
     }
 
+    // RETURNS THE LIST OF ALL USER PROFILES
     public List<UserProfile> getAllUserProfiles() {
         if (profileRepository.findAll().isEmpty())
             throw new InformationNotFoundException("No profiles set up yet!");
         return profileRepository.findAll();
     }
 
+    // CHANGES OLD PASSWORD OF CURRENT USER TO NEW, PUBLIC ENDPOINT BUT REQUIRES email AND password
     public void changePassword(PasswordChange passInfo) {
         if (passInfo.isNotNull()) {
             User currentUser = userRepository.findByEmailAddress(passInfo.getEmailAddress());
@@ -158,6 +166,7 @@ public class UserService {
             throw new InformationNotFoundException("Wrong input provided");
     }
 
+    // RETURNS A LIST OF ALL USERS
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }

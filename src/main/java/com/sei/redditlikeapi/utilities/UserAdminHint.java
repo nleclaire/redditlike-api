@@ -2,6 +2,7 @@ package com.sei.redditlikeapi.utilities;
 
 import com.sei.redditlikeapi.model.User;
 
+// Class Object used for setting ADMIN user
 public class UserAdminHint extends User {
 
     private String whoShotFirst;

@@ -1,5 +1,6 @@
 package com.sei.redditlikeapi.utilities;
 
+// Class object used for changing the password
 public class PasswordChange {
     private String emailAddress;
     private String oldPassword;
