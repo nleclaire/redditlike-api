@@ -55,7 +55,7 @@ public class CommentControllerTest {
         // set headers "Content-Type" : "application/json" and "Authorization" : "Bearer JWT_TOKEN"
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWt0b3JvQGhvdG1haWwuY29tIiwiZXhwIjoxNjE4NTU5ODk3LCJpYXQiOjE2MTg1MjM4OTd9.oZFSp2jQb5j5ee4h8m5bsmFx7fvQWtgpl9OW3R6_g0o");
+        headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWt0b3Iub2xlc25ldnljaEBob3RtYWlsLmNvbSIsImV4cCI6MTYxODYxMzIzNCwiaWF0IjoxNjE4NTc3MjM0fQ._Dmu8aP4ahDlA-NBG-ddPKSAWVe1m6S4GZA4BQHPajw");
 
         // return an HttpEntity with body of topic and headers
         return new HttpEntity<>(comment, headers);
@@ -65,7 +65,7 @@ public class CommentControllerTest {
     private HttpEntity createHttpRequest(){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWt0b3JvQGhvdG1haWwuY29tIiwiZXhwIjoxNjE4NTU5ODk3LCJpYXQiOjE2MTg1MjM4OTd9.oZFSp2jQb5j5ee4h8m5bsmFx7fvQWtgpl9OW3R6_g0o");
+        headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWt0b3Iub2xlc25ldnljaEBob3RtYWlsLmNvbSIsImV4cCI6MTYxODYxMzIzNCwiaWF0IjoxNjE4NTc3MjM0fQ._Dmu8aP4ahDlA-NBG-ddPKSAWVe1m6S4GZA4BQHPajw");
 
         return new HttpEntity<>(headers);
     }
