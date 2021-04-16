@@ -9,9 +9,9 @@ public class ControllerTestUtility {
         // set headers "Content-Type" : "application/json" and "Authorization" : "Bearer JWT_TOKEN"
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWt0b3Iub2xlc25ldnljaEBob3RtYWlsLmNvbSIsImV4cCI6MTYxODYxMzIzNCwiaWF0IjoxNjE4NTc3MjM0fQ._Dmu8aP4ahDlA-NBG-ddPKSAWVe1m6S4GZA4BQHPajw");
+        headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjM3BvQGdtYWlsLmNvbSIsImV4cCI6MTYxODYyNDQyMiwiaWF0IjoxNjE4NTg4NDIyfQ.0HwZKOUgofZMyigtIDqrw-AwtgMy940w6hqMt7cGFUU");
 
-        // return an HttpEntity with body of topic and headers
+        // return an HttpEntity with body of object and headers
         return new HttpEntity<>(object, headers);
     }
 
@@ -19,7 +19,7 @@ public class ControllerTestUtility {
     public HttpEntity createHttpRequest() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWt0b3Iub2xlc25ldnljaEBob3RtYWlsLmNvbSIsImV4cCI6MTYxODYxMzIzNCwiaWF0IjoxNjE4NTc3MjM0fQ._Dmu8aP4ahDlA-NBG-ddPKSAWVe1m6S4GZA4BQHPajw");
+        headers.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjM3BvQGdtYWlsLmNvbSIsImV4cCI6MTYxODYyNDQyMiwiaWF0IjoxNjE4NTg4NDIyfQ.0HwZKOUgofZMyigtIDqrw-AwtgMy940w6hqMt7cGFUU");
 
         return new HttpEntity<>(headers);
     }

@@ -42,7 +42,7 @@ public class User {
     @JoinColumn(name = "profile_id", referencedColumnName = "id") //LIKE THIS BECAUSE OWNING SIDE
     private UserProfile userProfile;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true) //User can have more than one recipe
+    @OneToMany(mappedBy = "user", orphanRemoval = true) //User can have more than one topic
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Topic> topicList;
 

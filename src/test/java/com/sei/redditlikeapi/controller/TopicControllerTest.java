@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.*;
 
+// Must run full test, or run tests in sequence
 @ExtendWith(SpringExtension.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -74,12 +75,12 @@ public class TopicControllerTest {
     public void putTopicShouldReturnASingleTopicWithUpdatedFields(){
         Long id = topicRepository.findByName("Test").getId();
         String resourceURL = "http://localhost:" + port + "/api/topics/" + id;
-        topic = new Topic("Test", "Update Description");
+        topic = new Topic("Update Test", "Update Description");
         HttpEntity<?> request = utility.createHttpEntityWithBody(topic);
         ResponseEntity<?> response = restTemplate.exchange(resourceURL, HttpMethod.PUT, request, Topic.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
-        assertThat(response.getBody()).hasFieldOrPropertyWithValue("name", "Test");
+        assertThat(response.getBody()).hasFieldOrPropertyWithValue("name", "Update Test");
         assertThat(response.getBody()).hasFieldOrPropertyWithValue("description", "Update Description");
     }
 
@@ -87,7 +88,7 @@ public class TopicControllerTest {
     // Verify that the response contains field "Response" as specified in controller
     @Test
     public void deleteTopicShouldReturnAResponseEntityWithFieldResponse(){
-        Long id = topicRepository.findByName("Test").getId();
+        Long id = topicRepository.findByName("Update Test").getId();
         String resourceURL = "http://localhost:" + port + "/api/topics/" + id;
 
         HttpEntity<?> request = utility.createHttpRequest();
