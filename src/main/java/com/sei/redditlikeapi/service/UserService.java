@@ -136,7 +136,7 @@ public class UserService {
     public void deleteProfile() {
         User currentUser = utility.getAuthenticatedUser();
         if (currentUser.getUserProfile() != null)
-            profileRepository.deleteById(currentUser.getUserProfile().getId());
+            profileRepository.deleteById(profileRepository.findByUserId(currentUser.getId()).getId());
         else
             throw new InformationNotFoundException("User profile doesn't exist for User with ID " +
                     currentUser.getId());
