@@ -61,9 +61,9 @@ class TopicRepositoryTest {
     }
 
     @Test
-    public void givenUserIdShouldReturnTopicWithThatId() {
+    public void givenUserIdShouldReturnListOfTopicsWithThatUserId() {
         topicRepository.save(topic);
-        assertEquals(topic.getId(), topicRepository.findByUserId(user.getId()).get(0).getId());
+        assertTrue(!topicRepository.findByUserId(user.getId()).isEmpty());
     }
 
     @Test
