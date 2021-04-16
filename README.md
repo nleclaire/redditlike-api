@@ -36,6 +36,7 @@ A RESTful API written in Java made for sharing articles.
 | GET | /auth/users/profile/all | Get all profiles |
 | POST | /auth/users/profile | Create a new profile |
 | PUT | /auth/users/profile/update | Update a profile |
+| DELETE | /auth/users/profile | Delete a profile |
 | DELETE | /auth/users/delete/{userId} | Deletes a specified user by Id |
 | GET | /auth/users | Get a list of users |
 | PUT | /auth/users/login/changepassword | Change a user's password |
