@@ -9,6 +9,7 @@ import com.sei.redditlikeapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -47,7 +48,7 @@ public class UserController {
         return userService.createProfile(newProfile);
     }
 
-    @PutMapping("/users/profile/update")
+    @PutMapping("/users/profile")
     public UserProfile updateProfile(@RequestBody UserProfile newProfile) {
         return userService.updateProfile(newProfile);
     }
@@ -58,6 +59,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/profile")
+    @Transactional
     public ResponseEntity<?> deleteProfile(){
         userService.deleteProfile();
         HashMap responseMessage = new HashMap();

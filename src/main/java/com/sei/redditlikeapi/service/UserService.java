@@ -135,11 +135,11 @@ public class UserService {
     // DELETES CURRENT USER PROFILE
     public void deleteProfile() {
         User currentUser = utility.getAuthenticatedUser();
-        if (currentUser.getUserProfile() != null)
-            profileRepository.deleteById(profileRepository.findByUserId(currentUser.getId()).getId());
-        else
+        if (currentUser.getUserProfile() == null)
             throw new InformationNotFoundException("User profile doesn't exist for User with ID " +
                     currentUser.getId());
+        userRepository.findById(currentUser.getId()).get().setUserProfile(null);
+        profileRepository.deleteById(currentUser.getUserProfile().getId());
     }
 
     // RETURNS THE LIST OF ALL USER PROFILES
