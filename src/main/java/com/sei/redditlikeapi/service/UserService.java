@@ -157,11 +157,13 @@ public class UserService {
                 throw new InformationNotFoundException("User with email address " + passInfo.getEmailAddress() +
                         " doesn't exist");
             else if (passwordEncoder.matches(passInfo.getOldPassword(), currentUser.getPassword())) {
+                if (passInfo.arePasswordsAlike())
+                    throw new InformationExistException("Old password and new password can not be the same");
                 currentUser.setPassword(passwordEncoder.encode(passInfo.getNewPassword()));
                 currentUser.setPasswordChangedTime(new Date(System.currentTimeMillis()));
                 userRepository.save(currentUser);
             } else
-                throw new InformationForbidden("Passwords do not match!");
+                throw new InformationForbidden("Entered Old password doesn't match your password!");
         } else
             throw new InformationNotFoundException("Wrong input provided");
     }

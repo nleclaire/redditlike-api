@@ -24,4 +24,8 @@ public class PasswordChange {
     public String getEmailAddress() {
         return emailAddress;
     }
+
+    public boolean arePasswordsAlike(){
+        return this.oldPassword.equals(this.newPassword) ? true : false;
+    }
 }
