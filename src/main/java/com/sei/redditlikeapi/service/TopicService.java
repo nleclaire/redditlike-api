@@ -3,16 +3,13 @@ package com.sei.redditlikeapi.service;
 import com.sei.redditlikeapi.exception.InformationExistException;
 import com.sei.redditlikeapi.exception.InformationForbidden;
 import com.sei.redditlikeapi.exception.InformationNotFoundException;
-import com.sei.redditlikeapi.model.Article;
 import com.sei.redditlikeapi.model.Topic;
 import com.sei.redditlikeapi.model.User;
-import com.sei.redditlikeapi.repository.ArticleRepository;
 import com.sei.redditlikeapi.repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TopicService {
@@ -22,6 +19,7 @@ public class TopicService {
     @Autowired
     private TopicRepository topicRepository;
 
+    // Return a list of topics if exists
     public List<?> getTopics() {
         if (topicRepository.findAll().isEmpty()) {
             throw new InformationNotFoundException("No topics found!");
@@ -29,6 +27,7 @@ public class TopicService {
             return topicRepository.findAll();
     }
 
+    // Return a single topic if exists
     public Topic getTopic(Long id) {
         if (topicRepository.findById(id).isEmpty()) {
             throw new InformationNotFoundException("Topic with ID " + id + " doesn't exist!");
@@ -36,6 +35,7 @@ public class TopicService {
             return topicRepository.findById(id).get();
     }
 
+    // Create a new topic if not exists already
     public Topic createTopic(Topic topicObject) {
         User currentUser = utility.getAuthenticatedUser();
         if (utility.checkIfUserTopicExists(topicRepository, currentUser.getId(), topicObject.getName()))
@@ -44,12 +44,14 @@ public class TopicService {
         else if (utility.checkIfTopicExists(topicRepository, topicObject.getName()))
             throw new InformationExistException("Topic with name " + topicObject.getName() + " already exists!");
         else {
-            topicObject.setUser(currentUser);
+            topicObject.setUser(currentUser); // set current user as original poster
             return topicRepository.save(topicObject);
         }
     }
 
-    //TODO: Maybe check if user actually sets changes to the topic
+    // Check if topic exists, and verify current user
+    // If user is either original poster OR admin, then update the topic
+    // Otherwise, throw exception
     public Topic updateTopic(Long topicId, Topic topicObject) {
         User currentUser = utility.getAuthenticatedUser();
         if (topicRepository.findById(topicId).isPresent()) {
@@ -65,9 +67,11 @@ public class TopicService {
             throw new InformationNotFoundException("Topic with ID " + topicId + " doesn't exist");
     }
 
+    // Verify topic exists by Id
+    // Verify user is either original poster OR is admin
+    // Delete the topic, or throw exception
     public void deleteTopic(Long topicId) {
         User currentUser = utility.getAuthenticatedUser();
-        System.out.println(currentUser);
         if (topicRepository.findById(topicId).isPresent()) {
             if (utility.checkIfUserTopicExists(topicRepository, topicId, currentUser.getId())
                     || utility.isUserAdmin(currentUser))
