@@ -20,7 +20,7 @@ public class Article {
     @Column
     private String title;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String textContent;
 
     @OneToMany(mappedBy = "article", orphanRemoval = true)
