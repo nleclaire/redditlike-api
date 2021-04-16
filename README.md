@@ -333,3 +333,4 @@ Note that it will automatically generate an Id for you
 
 - Create topics within topics
 - Check that user Profile actually deleted
+- Finish UserControllerTest
